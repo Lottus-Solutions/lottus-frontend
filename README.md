@@ -6,6 +6,6 @@ Este repositório contém a codificação frontend do projeto Lottus. Tudo que r
 
 ## 📦 Instalação
 ```sh
-git clone https://github.com/LottusOrg/lottus-frontend.git
+git clone https://github.com/Lottus-Solutions/lottus-frontend.git
 cd lottus-frontend
 npm install
