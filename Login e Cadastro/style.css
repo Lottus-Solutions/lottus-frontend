@@ -46,9 +46,9 @@
 
     .logotipo {
         position: absolute;
-        right: 100px;
-        top: 100px;
-        width: 100px;
+        right: 4vw;
+        top: 6vh;
+        width: 85px;
     }
     
     .title {
