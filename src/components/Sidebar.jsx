@@ -20,7 +20,7 @@ export function Sidebar() {
 
   return (
     <div className="fixed top-0 left-0 h-full w-72 bg-white shadow flex flex-col">
-      <div className="flex flex-col items-center mb-1">
+      <div className="flex flex-col items-center mb-10">
         <img src="/images/logo.svg" alt="Logo da Lottus" className="h-16 w-16 mt-10" />
         <h1 className="bg-gradient-to-r from-[#0292B7] to-[#98E2FA] bg-clip-text text-transparent text-3xl">Lottus</h1>
       </div>
