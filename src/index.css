@@ -16,6 +16,10 @@
     --font-croogla: 'Croogla 4F', sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 * {
     font-smooth: always;
     -webkit-font-smoothing: antialiased;
