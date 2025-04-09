@@ -1,8 +1,12 @@
+import { useNavigate } from "react-router-dom";
+
 export function Header() {
+    const navigate = useNavigate();
+
     return (
         <div className="w-full flex items-center justify-between h-32 pt-10">
-            <img src="public/images/logo.svg" alt="Logo da lottus" className="w-16 h-16 ml-32" />
-            
+            <img src="/images/logo.svg" alt="Logo da lottus" className="w-16 h-16 ml-32" />
+
             <ul className="flex gap-20">
                 <li className="text-[14px] cursor-pointer text-[#1F2122] relative group">
                     <a href="#home">
@@ -30,9 +34,13 @@ export function Header() {
                 </li>
             </ul>
 
-            <button className="mr-32 text-[14px] border-2 font-semibold w-20 h-8 items-center justify-center rounded-full bg-transparent border-[#0292B7] text-[#0292B7] cursor-pointer">
+            <button
+                className="mr-32 text-[14px] border-2 font-semibold w-20 h-8 items-center justify-center rounded-full bg-transparent border-[#0292B7] text-[#0292B7] cursor-pointer"
+                onClick={() => navigate("/login")}
+            >
                 Entrar
             </button>
         </div>
     );
 }
+
