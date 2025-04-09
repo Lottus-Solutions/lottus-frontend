@@ -21,8 +21,8 @@ export function Header() {
                     </a>
                 </li>
                 <li className="text-[14px] cursor-pointer text-[#1F2122] relative group">
-                    <a href="#funcionalidades">
-                        Funcionalidades
+                    <a href="#solucoes">
+                        Soluções
                         <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#0292B7] transition-all duration-400 ease-in-out group-hover:w-full"></span>
                     </a>
                 </li>
