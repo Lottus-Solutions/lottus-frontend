@@ -4,6 +4,7 @@ import { SessaoSobre } from "./components/SiteComponents/SessaoSobre";
 import { SessaoSolucoes } from "./components/SiteComponents/SessaoSolucoes";
 import { BotaoUp } from "./components/SiteComponents/BotaoUp";
 import { SessaoContato } from "./components/SiteComponents/SessaoContato";
+import { Footer } from "./components/SiteComponents/Footer";
 
 export function Site() {
     return (
@@ -12,12 +13,10 @@ export function Site() {
             <SessaoHome />
             <SessaoSobre />
             <SessaoSolucoes />
-            
             <div className="w-full h-full flex items-center justify-center">
                 <SessaoContato />
             </div>
-
-
+            <Footer />
             <BotaoUp />
         </div>
     )

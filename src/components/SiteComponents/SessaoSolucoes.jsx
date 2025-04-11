@@ -1,6 +1,6 @@
 export function SessaoSolucoes() {
     return (
-        <div className="bg-white py-10 mt-30 flex items-center justify-between px-32 scroll-mt-36" id="solucoes">
+        <div className="bg-white py-10 mt-30 flex items-center justify-between px-32 scroll-mt-24" id="solucoes">
             <div className="w-[520px] flex flex-col gap-3">
                 <p className="text-[14px] text-[#0292B7] font-semibold">Soluções</p>
                 <h2 className="text-2xl font-bold">Simplifique a gestão, potencialize o saber</h2>
