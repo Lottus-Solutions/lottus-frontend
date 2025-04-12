@@ -13,7 +13,12 @@ import { Login } from "./pages/auth/Login";
 import { Cadastro } from "./pages/auth/Cadastro";
 
 const autenticacao = () => {
-  return true; 
+  const token = localStorage.getItem('token');
+  if (token) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 function LayoutPrivado() {
