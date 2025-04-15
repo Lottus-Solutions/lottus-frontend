@@ -1,6 +1,6 @@
 export function SessaoContato() {
     return (
-        <div className="flex w-8/10 h-[600px] mt-40 scroll-mt-20" id="contato">
+        <div className="flex w-10/12 h-[600px] mt-48 scroll-mt-20" id="contato">
             <div className="w-3/4 bg-white p-14 rounded-l-3xl">
                 <div className="flex h-full">
                     <div className="flex flex-col w-fit">
@@ -10,10 +10,7 @@ export function SessaoContato() {
                             <input type="text" placeholder="Nome *" required className="w-full border border-gray-300 p-3 mb-4 text-sm rounded" />
                             <input type="email" placeholder="Email *" required className="w-full border border-gray-300 p-3 mb-4 text-sm rounded" />
                             <input type="text" placeholder="Telefone *" required className="w-full border border-gray-300 p-3 mb-4 text-sm rounded" />
-                            <button
-                                type="submit"
-                                className="w-full bg-[#0292B7] text-white font-bold mt-10 py-4 text-sm rounded"
-                            >
+                            <button type="submit" className="w-full bg-[#0292B7] text-white font-bold mt-10 py-4 text-sm rounded">
                                 ENVIAR
                             </button>
                         </form>

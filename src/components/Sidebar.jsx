@@ -110,7 +110,6 @@ export function Sidebar() {
   );
 }
 
-// Componente para evitar repetição de botão
 function SidebarButton({ nome, rota, Icon, ativo, onClick }) {
   return (
     <button
