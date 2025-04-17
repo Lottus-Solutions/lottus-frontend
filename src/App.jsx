@@ -6,8 +6,6 @@ import { Assistente } from "./pages/plataforma/Assistente";
 import { Emprestimos } from "./pages/plataforma/Emprestimos";
 import { Catalogo } from "./pages/plataforma/Catalogo";
 import { Turmas } from "./pages/plataforma/Turmas";
-import { Categorias } from "./pages/plataforma/Categorias";
-import { Perfil } from "./pages/plataforma/Perfil";
 import { Site } from "./Site";
 import { Login } from "./pages/auth/Login";
 import { Cadastro } from "./pages/auth/Cadastro";
@@ -61,8 +59,6 @@ export function App() {
           <Route path="/emprestimos" element={<Emprestimos />} />
           <Route path="/catalogo" element={<Catalogo />} />
           <Route path="/turmas" element={<Turmas />} />
-          <Route path="/categorias" element={<Categorias />} />
-          <Route path="/perfil" element={<Perfil />} />
         </Route>
       </Routes>
     </Router>

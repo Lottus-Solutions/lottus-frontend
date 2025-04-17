@@ -10,7 +10,7 @@ export function Catalogo() {
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Catálogo</h2>
             <div className="flex justify-between w-9/10">
-                <Search />
+                <Search placeholder="Busque por livro, autor ou ID"/>
                 <div className="flex gap-4">
                     <div className="relative inline-block">
                         <select name="Categoria" className="w-28 border-[#727272] text-[#727272] border-[1px] rounded-full px-4 pr-8 outline-0 text-xs h-9 appearance-none">

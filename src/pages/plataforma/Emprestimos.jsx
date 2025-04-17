@@ -9,7 +9,7 @@ export function Emprestimos() {
              <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Empréstimos</h2>
             <div className="flex justify-between w-9/10">
-                <Search />
+                <Search placeholder="Busque por livro, autor ou ID"/>
                 <div className="flex items-center justify-center gap-5 mr-8 w-36 px-4 h-9 border-[#727272] border-[1px] rounded-full">
                     <p className="text-[#727272] text-xs">Em atraso</p>
                     <input type="checkbox" />
