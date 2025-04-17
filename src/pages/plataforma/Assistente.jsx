@@ -11,7 +11,7 @@ export function Assistente() {
                     <p className="text-2xl">Olá Mary!</p>
                     <p className="text-2xl">Como posso ajudar?</p>
                 </div>
-                <Search placeholder="Faça uma pergunta" />
+                <Search placeholder="Faça uma pergunta..." />
                 <div className="flex gap-4 mt-8">
                     <div className="flex gap-2 text-[#0292B7] items-center justify-center border-[1px] border-[#0292B7] rounded-full w-36 h-8 cursor-pointer">
                         <Repeat2 className="w-4 h-4"/>
