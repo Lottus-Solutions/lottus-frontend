@@ -1,10 +1,12 @@
 import { EmprestimoListItem } from "../../components/EmprestimoListItem";
+import { Perfil } from "../../components/Perfil";
 import { Search } from "../../components/Search";
 import '../../index.css'
 
 export function Emprestimos() {
     return (
         <div className="h-screen pt-16 pl-16">
+             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Empréstimos</h2>
             <div className="flex justify-between w-9/10">
                 <Search />
@@ -14,7 +16,6 @@ export function Emprestimos() {
                 </div>
             </div>
             <div className="mt-12 w-9/10 h-7/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-
                 <EmprestimoListItem
                     aluno='Caio Viveiros'
                     livro='Romeu e Julieta'
@@ -70,6 +71,7 @@ export function Emprestimos() {
                     diasAtraso='2 dias'
                 />
             </div>
+           
         </div>
     )
 }

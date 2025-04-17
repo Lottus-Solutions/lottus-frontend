@@ -76,28 +76,6 @@ export function Sidebar() {
             onClick={navegar}
           />
         </div>
-
-        <p className="font-semibold text-zinc-400 text-[10px] mb-4 pl-10 mt-5">
-          CONFIGURAÇÕES
-        </p>
-
-        <div className="flex flex-col gap-1">
-          <SidebarButton
-            nome="Categorias"
-            rota="/categorias"
-            Icon={ChartBarStacked}
-            ativo={location.pathname === "/categorias"}
-            onClick={navegar}
-          />
-          <SidebarButton
-            nome="Perfil"
-            rota="/perfil"
-            Icon={CircleUser}
-            ativo={location.pathname === "/perfil"}
-            onClick={navegar}
-          />
-        </div>
-
         <button
           className="flex items-center gap-4 pl-10 absolute bottom-10 hover:cursor-pointer"
           onClick={handleLogout}
