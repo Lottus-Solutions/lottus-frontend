@@ -1,14 +1,33 @@
 import { Book, ChartColumnStacked, Repeat2, Users } from "lucide-react";
 import { Search } from "../../components/Search";
 import { Perfil } from "../../components/Perfil";
+import { useEffect, useState } from "react";
+import  axios from "../../configs/axiosConfig.js";
 
 export function Assistente() {
+    const [nomeUsuario, setNomeUsuario] = useState(""); 
+
+    function getDadosUsuario() {
+        axios.get('/usuarios/me')
+            .then(response => {
+                setNomeUsuario(response.data.nome);
+            })
+            .catch(error => {
+                console.error("Erro ao obter dados do usuário:", error);
+            });
+    }
+
+    useEffect(() => {
+        getDadosUsuario(); 
+    }, []);
+
+
     return (
         <div className="flex flex-col items-center justify-center h-screen">
             <Perfil />
             <div className="flex flex-col items-center justify-center">
                 <div className="flex flex-col items-center justify-center mb-12">
-                    <p className="text-2xl">Olá Mary!</p>
+                    <p className="text-2xl">Olá, {nomeUsuario}!</p>
                     <p className="text-2xl">Como posso ajudar?</p>
                 </div>
                 <Search placeholder="Faça uma pergunta..." />
