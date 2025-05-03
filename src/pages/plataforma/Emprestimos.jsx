@@ -20,55 +20,55 @@ export function Emprestimos() {
                     aluno='Caio Viveiros'
                     livro='Romeu e Julieta'
                     dataDevolucao='17/01/2006'
-                    diasAtraso='3 dias'
+                    diasAtraso='3'
                 />
                 <EmprestimoListItem
                     aluno='Sergio Emiliano'
                     livro='Harry Potter'
                     dataDevolucao='17/01/2006'
-                    diasAtraso='1 dias'
+                    diasAtraso='1'
                 />
                 <EmprestimoListItem
                     aluno='Sophia Balboni'
                     livro='O poder do habito'
                     dataDevolucao='17/01/2006'
-                    diasAtraso='0 dias'
+                    diasAtraso='0'
                 />
                 <EmprestimoListItem
                     aluno='Mariana Castro'
                     livro='Dom Casmurro'
                     dataDevolucao='18/01/2006'
-                    diasAtraso='2 dias'
+                    diasAtraso='2'
                 />
                 <EmprestimoListItem
                     aluno='Lucas Almeida'
                     livro='1984'
                     dataDevolucao='16/01/2006'
-                    diasAtraso='4 dias'
+                    diasAtraso='4'
                 />
                 <EmprestimoListItem
                     aluno='Ana Beatriz'
                     livro='A Revolução dos Bichos'
                     dataDevolucao='17/01/2006'
-                    diasAtraso='0 dias'
+                    diasAtraso='0'
                 />
                 <EmprestimoListItem
                     aluno='Felipe Nogueira'
                     livro='O Senhor dos Anéis'
                     dataDevolucao='19/01/2006'
-                    diasAtraso='5 dias'
+                    diasAtraso='5'
                 />
                 <EmprestimoListItem
                     aluno='Isabela Martins'
                     livro='A Menina que Roubava Livros'
                     dataDevolucao='18/01/2006'
-                    diasAtraso='0 dias'
+                    diasAtraso='1'
                 />
                 <EmprestimoListItem
                     aluno='Rafael Torres'
                     livro='Capitães da Areia'
                     dataDevolucao='20/01/2006'
-                    diasAtraso='2 dias'
+                    diasAtraso='2'
                 />
             </div>
            

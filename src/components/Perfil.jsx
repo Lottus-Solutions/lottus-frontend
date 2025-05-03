@@ -28,7 +28,7 @@ export function Perfil() {
                     >
                         <p>Olá, Mary</p>
                         <p className="text-sm text-[#727272] cursor-pointer hover:text-[#0292B7] transition-colors">
-                            Ver perfil
+                            Perfil
                         </p>
                     </motion.div>
                 )}

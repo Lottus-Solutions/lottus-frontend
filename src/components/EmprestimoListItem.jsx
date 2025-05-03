@@ -3,7 +3,6 @@ import { BotaoPrincipal } from "./botoes/BotaoPrincipal";
 import { BotaoBranco } from "./botoes/BotaoBranco";
 import { ModalFinalizar } from "./Modals/ModalFinalizar";
 
-
 export function EmprestimoListItem(props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -14,6 +13,8 @@ export function EmprestimoListItem(props) {
     const closeModal = () => {
         setIsModalOpen(false);
     };
+
+    const diasAtraso = Number(props.diasAtraso);
 
     return (
         <div>
@@ -32,7 +33,9 @@ export function EmprestimoListItem(props) {
                 </div>
                 <div className="flex flex-col gap-3 w-28">
                     <p className="text-[#727272] text-xs">Dias em atraso</p>
-                    <p className="text-xs">{props.diasAtraso}</p>
+                    <p className={`text-xs ${diasAtraso > 0 ? "text-[#cf4a4a]" : ""}`}>
+                        {diasAtraso} dias
+                    </p>
                 </div>
 
                 <div className="flex items-center gap-6">
@@ -41,7 +44,6 @@ export function EmprestimoListItem(props) {
                 </div>
             </div>
 
-            {/* Renderiza o ModalFinalizar se isModalOpen for true */}
             {isModalOpen && <ModalFinalizar onClose={closeModal} />}
         </div>
     );

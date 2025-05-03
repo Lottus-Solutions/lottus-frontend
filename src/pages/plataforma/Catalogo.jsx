@@ -1,4 +1,4 @@
-import { Filter } from "lucide-react";
+import { ChartColumnStacked, Filter } from "lucide-react";
 import { BotaoPrincipal } from "../../components/botoes/BotaoPrincipal";
 import { CatalogoListItem } from "../../components/CatalogoListItem";
 import { Perfil } from "../../components/Perfil";
@@ -10,7 +10,7 @@ export function Catalogo() {
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Catálogo</h2>
             <div className="flex justify-between w-9/10">
-                <Search placeholder="Busque por livro, autor ou ID"/>
+                <Search placeholder="Busque por livro, autor ou ID" />
                 <div className="flex gap-4">
                     <div className="relative inline-block">
                         <select name="Categoria" className="w-28 border-[#727272] text-[#727272] border-[1px] rounded-full px-4 pr-8 outline-0 text-xs h-9 appearance-none">
@@ -30,7 +30,9 @@ export function Catalogo() {
                         </select>
                         <Filter className="absolute top-1/2 right-3 -translate-y-1/2 text-[#727272]" size={14} />
                     </div>
-                    
+                    <button className="rounded-full h-9 w-9 flex items-center justify-center border-2 border-[#0292B7] cursor-pointer" title="Ver categorias">
+                        <ChartColumnStacked className="w-5 h-5 text-[#0292B7]" />
+                    </button>
                     <BotaoPrincipal nome="Adicionar Livro" />
                 </div>
             </div>
