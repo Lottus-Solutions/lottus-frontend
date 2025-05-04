@@ -11,21 +11,20 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 export function Sidebar() {
   const navigate = useNavigate();
-  const location = useLocation(); // Pega a localização atual
+  const location = useLocation(); 
 
-  // Rotas públicas em que a Sidebar não aparece
   const rotasPublicas = ["/", "/login", "/cadastro"];
   if (rotasPublicas.includes(location.pathname)) {
-    return null; // Não renderiza a Sidebar nas rotas públicas
+    return null; 
   }
 
   const navegar = (rota) => {
-    navigate(rota); // Navega para a rota especificada
+    navigate(rota); 
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("auth"); // Remove a autenticação do localStorage
-    navigate("/login"); // Redireciona para a página de login
+    localStorage.removeItem("auth"); 
+    navigate("/login"); 
   };
 
   return (
@@ -72,7 +71,7 @@ export function Sidebar() {
             nome="Turmas"
             rota="/turmas"
             Icon={Users}
-            ativo={location.pathname === "/turmas"}
+            ativo={location.pathname === "/turmas" || location.pathname === "/alunos"}
             onClick={navegar}
           />
         </div>

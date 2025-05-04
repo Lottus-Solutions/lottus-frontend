@@ -9,32 +9,32 @@ import { Turmas } from "./pages/plataforma/Turmas";
 import { Site } from "./Site";
 import { Login } from "./pages/auth/Login";
 import { Cadastro } from "./pages/auth/Cadastro";
+import { Alunos } from "./pages/plataforma/Alunos";
 
 const autenticacao = () => {
   const token = localStorage.getItem('token');
-  return true
-  // if (token) {
-  //   return true;
-  // } else {
-  //   return false;
-  // }
+  if (token) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 function LayoutPrivado() {
+  if (!autenticacao()) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <div className="w-screen h-screen bg-[#f7f7f7] flex">
       <div className="w-72">
         <Sidebar />
       </div>
       <div className="flex-1 h-screen overflow-auto">
-        <Outlet /> 
+        <Outlet />
       </div>
     </div>
   );
-}
-
-function RotaPrivada({ children }) {
-  return autenticacao() ? children : <Navigate to="/" />;
 }
 
 export function App() {
@@ -47,19 +47,15 @@ export function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
 
-        {/* Rotas privadas com layout e proteção */}
-        <Route
-          element={
-            <RotaPrivada>
-              <LayoutPrivado />
-            </RotaPrivada>
-          }
-        >
+        {/* Rotas privadas */}
+        <Route element={<LayoutPrivado />}>
           <Route path="/assistente" element={<Assistente />} />
           <Route path="/emprestimos" element={<Emprestimos />} />
           <Route path="/catalogo" element={<Catalogo />} />
           <Route path="/turmas" element={<Turmas />} />
+          <Route path="/alunos" element={<Alunos />} />
         </Route>
+
       </Routes>
     </Router>
   );

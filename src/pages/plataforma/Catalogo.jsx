@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { ChartColumnStacked, Filter } from "lucide-react";
 import { BotaoPrincipal } from "../../components/botoes/BotaoPrincipal";
 import { CatalogoListItem } from "../../components/CatalogoListItem";
 import { Perfil } from "../../components/Perfil";
 import { Search } from "../../components/Search";
+import { ModalAdicionarLivro } from "../../components/Modals/ModalAdicionarLivro";
 
 export function Catalogo() {
+    const [mostrarModal, setMostrarModal] = useState(false);
+
     return (
-        <div className="h-screen pt-16 pl-16">
+        <div className="h-screen pt-16 pl-16 relative">
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Catálogo</h2>
             <div className="flex justify-between w-9/10">
@@ -30,10 +34,15 @@ export function Catalogo() {
                         </select>
                         <Filter className="absolute top-1/2 right-3 -translate-y-1/2 text-[#727272]" size={14} />
                     </div>
-                    <button className="rounded-full h-9 w-9 flex items-center justify-center border-2 border-[#0292B7] cursor-pointer" title="Ver categorias">
+                    <button
+                        className="rounded-full h-9 w-9 flex items-center justify-center border-2 border-[#0292B7] cursor-pointer"
+                        title="Ver categorias"
+                    >
                         <ChartColumnStacked className="w-5 h-5 text-[#0292B7]" />
                     </button>
-                    <BotaoPrincipal nome="Adicionar Livro" />
+                    <div onClick={() => setMostrarModal(true)}>
+                        <BotaoPrincipal nome="Adicionar Livro" />
+                    </div>
                 </div>
             </div>
             <div className="mt-12 w-9/10 h-7/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
@@ -45,6 +54,10 @@ export function Catalogo() {
                 <CatalogoListItem />
                 <CatalogoListItem />
             </div>
+
+            {mostrarModal && (
+                <ModalAdicionarLivro onClose={() => setMostrarModal(false)} />
+            )}
         </div>
-    )
+    );
 }

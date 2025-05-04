@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BotaoPrincipal } from "./botoes/BotaoPrincipal";
 import { BotaoBranco } from "./botoes/BotaoBranco";
-import { ModalFinalizar } from "./Modals/ModalFinalizar";
+import { ModalFinalizar } from "./Alerts/ModalFinalizar";
 
 export function EmprestimoListItem(props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,6 +45,8 @@ export function EmprestimoListItem(props) {
             </div>
 
             {isModalOpen && <ModalFinalizar onClose={closeModal} />}
+
+            {}
         </div>
     );
 }

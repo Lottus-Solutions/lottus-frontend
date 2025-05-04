@@ -28,11 +28,6 @@ export function Turmas() {
                 <CardTurma />
                 <CardTurma />
             </div>
-
-
-
-
-
         </div>
     )
 }

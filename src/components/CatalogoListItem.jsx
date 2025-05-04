@@ -1,8 +1,11 @@
 import { MenuIcon } from "lucide-react";
 import { BotaoPrincipal } from "./botoes/BotaoPrincipal";
 import { StatusItem } from "./StatusItem";
+import { useState } from "react";
+import { ModalDetalhesLivro } from "../components/Modals/ModalDetalhesLivro";
 
 export function CatalogoListItem() {
+    const [modalDetalhes, setModalDetalhes] = useState(false);
     return (
         <div className="flex gap-x-12 border-b-[1px] border-[#727272] pb-8 justify-around items-center">
             <div className="flex flex-col gap-3 w-20">
@@ -31,8 +34,16 @@ export function CatalogoListItem() {
             </div>
             <div className="flex items-center gap-5">
                 <BotaoPrincipal nome="Emprestar" />
-                <MenuIcon className="w-4 h-4 text-[#727272] cursor-pointer" />
+                <div onClick={() => setModalDetalhes(true)}>
+                    <MenuIcon className="w-4 h-4 text-[#727272] cursor-pointer" />
+                </div>
             </div>
+
+            {modalDetalhes && (
+                <ModalDetalhesLivro onClose={() => setModalDetalhes(false)} />
+            )}
         </div>
+
+
     )
 }
