@@ -25,19 +25,15 @@ export function ModalAdicionarAluno(props) {
                     <p className="text-[#414651]">Nome do aluno*</p>
                     <input
                         type="text"
-                        className="border border-gray-300 rounded px-4 py-[5px] text-sm"
+                        className="border border-gray-300 rounded px-2 py-[5px] text-sm"
                     />
                     <p className="text-[#414651]">Matricula*</p>
                     <input
                         type="text"
-                        className="border border-gray-300 rounded px-4 py-[5px] text-sm"
+                        className="border border-gray-300 rounded px-2 py-[5px] text-sm"
                     />
                     <p className="text-[#414651]">Grau*</p>
                     <div className="flex gap-4 mt-4">
-                        <div className="flex gap-2">
-                            <input type="checkbox" />
-                            <p className="text-[#727272] text-xs">Pré</p>
-                        </div>
                         <div className="flex gap-2">
                             <input type="checkbox" />
                             <p className="text-[#727272] text-xs">1° Fundamental</p>
@@ -51,7 +47,7 @@ export function ModalAdicionarAluno(props) {
                             <p className="text-[#727272] text-xs">Ensino Médio</p>
                         </div>
                     </div>
-                    <select name="Turma" className="border border-gray-300 rounded px-4 py-[5px] text-sm outline-0 appearance-none mt-4 mb-4">
+                    <select name="Turma" className="border border-gray-300 rounded px-2 py-[5px] text-sm outline-0 mt-4 mb-4">
                         <option value="">Selecione uma turma</option>
                         <option value="">1° Ano</option>
                         <option value="">2° Ano</option>

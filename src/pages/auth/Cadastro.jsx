@@ -72,7 +72,7 @@ export function Cadastro() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="bg-green-50 text-green-700 border-b-3 border-green-700 rounded-xl shadow-lg fixed top-7 z-50 px-9 py-6 mx-auto left-1/2 -translate-x-1/2"
+            className="bg-green-50 text-green-700 rounded-xl shadow-lg fixed top-7 z-50 px-9 py-6 mx-auto left-1/2 -translate-x-1/2"
           >
             <div className="flex items-center gap-3">
               <div>

@@ -25,8 +25,8 @@ export function ModalDetalhesLivro(props) {
                         <p className='text-sm text-white'>Aventura</p>
                     </div>
                     <div className='flex flex-col gap-2'>
-                        <p className='text-sm'>Quantidade: 3</p>
-                        <p className='text-sm'>Reservado: 2/3</p>
+                        <p className='text-sm flex items-center gap-1'>Quantidade: <p className='text-sm text-[#727272]'>3</p></p>
+                        <p className='text-sm flex items-center gap-1'>Reservado: <p className='text-sm text-[#727272]'>2/3</p></p>
                     </div>
                     <div className='flex flex-col gap-2 w-[80%]'>
                         <p className='text-sm'>Descrição:</p>

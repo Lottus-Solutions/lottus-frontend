@@ -25,20 +25,20 @@ export function ModalAdicionarLivro(props) {
                     <p className="text-[#414651]">ISBN</p>
                     <input
                         type="text"
-                        className="border border-gray-300 rounded px-4 py-[5px] text-sm"
+                        className="border border-gray-300 rounded px-2 py-[5px] text-sm"
                     />
                     <p className="text-[#414651]">Nome do livro*</p>
                     <input
                         type="text"
-                        className="border border-gray-300 rounded px-4 py-[5px] text-sm"
+                        className="border border-gray-300 rounded px-2 py-[5px] text-sm"
                     />
                     <p className="text-[#414651]">Autor do livro*</p>
                     <input
                         type="text"
-                        className="border border-gray-300 rounded px-4 py-[5px] text-sm"
+                        className="border border-gray-300 rounded px-2 py-[5px] text-sm"
                     />
                     <p className="text-[#414651]">Categoria*</p>
-                    <select name="Categoria" className="border border-gray-300 rounded px-4 py-[5px] text-sm outline-0 appearance-none">
+                    <select name="Categoria" className="border border-gray-300 rounded px-2 py-[5px] text-sm outline-0">
                         <option value="">Aventura</option>
                         <option value="">Terror</option>
                         <option value="">Ficção</option>
@@ -47,7 +47,7 @@ export function ModalAdicionarLivro(props) {
                     <p className="text-[#414651]">Quantidade de livros*</p>
                     <input
                         type="text"
-                        className="border border-gray-300 rounded px-4 py-[5px] text-sm"
+                        className="border border-gray-300 rounded px-2 py-[5px] text-sm"
                     />
                 </form>
 

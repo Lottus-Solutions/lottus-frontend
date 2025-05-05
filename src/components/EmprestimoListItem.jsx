@@ -34,9 +34,10 @@ export function EmprestimoListItem(props) {
                 <div className="flex flex-col gap-3 w-28">
                     <p className="text-[#727272] text-xs">Dias em atraso</p>
                     <p className={`text-xs ${diasAtraso > 0 ? "text-[#cf4a4a]" : ""}`}>
-                        {diasAtraso} dias
+                        {diasAtraso} {diasAtraso === 1 ? "dia" : "dias"}
                     </p>
                 </div>
+
 
                 <div className="flex items-center gap-6">
                     <BotaoBranco nome="Renovar" />
@@ -46,7 +47,7 @@ export function EmprestimoListItem(props) {
 
             {isModalOpen && <ModalFinalizar onClose={closeModal} />}
 
-            {}
+            { }
         </div>
     );
 }
