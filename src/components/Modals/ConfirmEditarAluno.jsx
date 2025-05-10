@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-export function ModalFinalizar({ onClose }) {
+export function ConfirmEditarAluno({ onClose }) {
     return (
         <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -10,8 +10,8 @@ export function ModalFinalizar({ onClose }) {
         >
             <img src="/images/finalizar-emprestimo-icon.svg" alt="Icone de finalização" className="w-12" />
             <div className="flex flex-col gap-2">
-                <p className='font-semibold'>Finalizar Empréstimo?</p>
-                <p className="text-[#727272] text-sm">Tem certeza de que deseja finalizar este empréstimo? Essa ação não poderá ser desfeita.</p>
+                <p className='font-semibold'>Editar Informações</p>
+                <p className="text-[#727272] text-sm">Você tem certeza que deseja modificar os dados do Aluno Matheus Blasco?</p>
             </div>
             <div className="flex gap-4 w-full">
                 <button className="w-1/2 border-[1px] border-[#727272] rounded-[8px] p-2 cursor-pointer" onClick={onClose}> Cancelar</button>

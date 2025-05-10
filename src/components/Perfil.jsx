@@ -5,6 +5,7 @@ import  axios from "../configs/axiosConfig.js";
 export function Perfil() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [nomeUsuario, setNomeUsuario] = useState(""); 
+    const [emailUsuario, setEmailUsuario] = useState("");
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -14,6 +15,7 @@ export function Perfil() {
         axios.get('/usuarios/me')
             .then(response => {
                 setNomeUsuario(response.data.nome);
+                setEmailUsuario(response.data.email);
             })
             .catch(error => {
                 console.error("Erro ao obter dados do usuário:", error);
@@ -40,11 +42,13 @@ export function Perfil() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.1 }}
-                        className="absolute mt-2 right-0 bg-white rounded-2xl p-4 w-44 h-fit shadow-lg flex flex-col items-start gap-2 z-50"
+                        className="absolute mt-3 right-0 bg-white rounded-2xl p-6 w-fit min-w-44 h-fit shadow-lg flex flex-col items-start gap-2 z-50"
                     >
-                        <p>Olá, {nomeUsuario}</p>
+                        <p>{nomeUsuario}</p>
+                        <p className="text-[#727272] mb-2 text-sm">{emailUsuario}</p>
+                        <div className="w-full border-t border-gray-200 my-2" />
                         <p className="text-sm text-[#727272] cursor-pointer hover:text-[#0292B7] transition-colors">
-                            Perfil
+                            Editar Perfil
                         </p>
                         <p className="text-sm text-[#727272] cursor-pointer hover:text-[#0292B7] transition-colors">
                             Upload de arquivos

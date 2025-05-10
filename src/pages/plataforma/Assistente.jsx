@@ -63,7 +63,7 @@ export function Assistente() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <Perfil />
-        <div className="flex flex-col items-center justify-center mt-40">
+        <div className="flex flex-col items-center justify-center mt-20">
           <div className="flex flex-col items-center justify-center mb-12">
             <p className="text-2xl">Olá, {nomeUsuario}!</p>
             <p className="text-2xl">Como posso ajudar?</p>
@@ -119,7 +119,7 @@ export function Assistente() {
             </button>
           </div>
   
-          <div className="mt-4 w-full max-w-xl">
+          <div className="mt-2 w-full max-w-xl">
             <SugestaoPerguntas perguntas={perguntas} setInputValue={setInputValue} />
           </div>
         </div>

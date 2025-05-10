@@ -1,23 +1,32 @@
 import { useState } from "react";
 import { BotaoPrincipal } from "./botoes/BotaoPrincipal";
 import { BotaoBranco } from "./botoes/BotaoBranco";
-import { ModalFinalizar } from "./Alerts/ModalFinalizar";
+import { ConfirmFinalizarEmprestimo } from "./Modals/ConfirmFinalizarEmprestimo";
+import { AlertSucesso } from "./Alerts/AlertSucesso";
 
 export function EmprestimoListItem(props) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [confirmModal, setShowConfirm] = useState(false);
+    const [finalizarEmprestimo, setFinalizar] = useState(false);
+    const [renovarEmprestimo, setRenovar] = useState(false);
 
     const handleFinalizarClick = () => {
-        setIsModalOpen(true);
+        setShowConfirm(true);
     };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
+    const handleConfirm = () => {
+        setShowConfirm(false);
+        setFinalizar(true);
     };
+
+    const handleRenovarClick = () => {
+        setRenovar(true);
+    }
+
 
     const diasAtraso = Number(props.diasAtraso);
 
     return (
-        <div>
+        <div className="relative">
             <div className="flex gap-x-12 border-b-[1px] border-[#727272] pb-8 justify-around">
                 <div className="flex flex-col gap-3 w-56">
                     <p className="text-[#727272] text-xs">Aluno</p>
@@ -38,16 +47,30 @@ export function EmprestimoListItem(props) {
                     </p>
                 </div>
 
-
                 <div className="flex items-center gap-6">
-                    <BotaoBranco nome="Renovar" />
-                    <BotaoPrincipal nome="Finalizar" onClick={handleFinalizarClick} />
+                    <BotaoBranco nome="Renovar" onClick={handleRenovarClick}/>
+                    <BotaoPrincipal nome="Finalizar" onClick={handleFinalizarClick}/>
                 </div>
             </div>
 
-            {isModalOpen && <ModalFinalizar onClose={closeModal} />}
+            {confirmModal && (
+                <ConfirmFinalizarEmprestimo
+                    onClose={() => setShowConfirm(false)}
+                    onConfirm={handleConfirm}
+                />
+            )}
 
-            { }
+            {finalizarEmprestimo && (
+                <AlertSucesso titulo='Empréstimo Finalizado' descricao='Este livro acabou de ter o empréstimo finalizado com o aluno.'
+                    onClose={() => setFinalizar(false)}
+                />
+            )}
+
+            {renovarEmprestimo && (
+                <AlertSucesso titulo='Empréstimo Renovado' descricao='Este livro acabou de ter o empréstimo renovado para daqui 15 dias.'
+                    onClose={() => setRenovar(false)}
+                />
+            )}
         </div>
     );
 }
