@@ -33,6 +33,9 @@ export function ModalDetalhesLivro(props) {
                         <p className='text-sm text-[#727272]'>Harry Potter e a Câmara Secreta é o segundo livro da série escrita por J.K. Rowling. Nele, Harry retorna a Hogwarts para seu segundo ano, mas logo eventos estranhos começam a acontecer: alunos estão sendo petrificados e uma mensagem assustadora aparece nas paredes do castelo, alertando sobre a abertura da lendária Câmara Secreta. Com a ajuda de Rony e Hermione, Harry investiga a origem do perigo e precisa enfrentar um grande mistério que envolve monstros, magia antiga e segredos do passado da escola.
                         </p>
                     </div>
+                    <div>
+                        
+                    </div>
 
                 </div>
                 <div className='w-2/3'>

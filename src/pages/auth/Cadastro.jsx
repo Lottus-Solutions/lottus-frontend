@@ -54,7 +54,7 @@ export function Cadastro() {
         setTimeout(() => {
           setSuccess(false);
           navigate('/login');
-        }, 3000); 
+        }, 2000); 
       }
     } catch (erro) {
       setError('Erro ao cadastrar. Tente novamente.');

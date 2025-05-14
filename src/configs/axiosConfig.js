@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-
 const getToken = () => localStorage.getItem('token');
 
 axios.defaults.baseURL = 'http://localhost:8080'; 

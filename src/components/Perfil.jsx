@@ -65,6 +65,9 @@ export function Perfil() {
                         <p className="text-sm text-[#727272] cursor-pointer hover:text-[#0292B7] transition-colors" onClick={() => setUploadOpen(true)}>
                             Upload de arquivos
                         </p>
+                        <p className="text-sm text-[#727272] cursor-pointer hover:text-[#0292B7] transition-colors">
+                            Finalizar semestre
+                        </p>
                     </motion.div>
                 )}
             </AnimatePresence>
