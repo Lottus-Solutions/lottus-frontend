@@ -1,15 +1,27 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import  axios from "../configs/axiosConfig.js";
+import { ModalEditarPerfil } from "./Modals/ModalEditarPerfil.jsx";
+import { ModalUpload } from "./Modals/ModalUpload.jsx";
 
 export function Perfil() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [nomeUsuario, setNomeUsuario] = useState(""); 
     const [emailUsuario, setEmailUsuario] = useState("");
+    const [editarPerfilOpen, setEditarPerfilOpen] = useState(false);
+    const [uploadOpen, setUploadOpen] = useState(false);
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
+
+    function handleCloseUpload() {
+        setEditarPerfilOpen(false); 
+    }
+
+    function handleClosePerfil() {
+        setEditarPerfilOpen(false); 
+    }
 
     function getDadosUsuario() {
         axios.get('/usuarios/me')
@@ -47,15 +59,18 @@ export function Perfil() {
                         <p>{nomeUsuario}</p>
                         <p className="text-[#727272] mb-2 text-sm">{emailUsuario}</p>
                         <div className="w-full border-t border-gray-200 my-2" />
-                        <p className="text-sm text-[#727272] cursor-pointer hover:text-[#0292B7] transition-colors">
+                        <p className="text-sm text-[#727272] cursor-pointer hover:text-[#0292B7] transition-colors" onClick={() => setEditarPerfilOpen(true)}>
                             Editar Perfil
                         </p>
-                        <p className="text-sm text-[#727272] cursor-pointer hover:text-[#0292B7] transition-colors">
+                        <p className="text-sm text-[#727272] cursor-pointer hover:text-[#0292B7] transition-colors" onClick={() => setUploadOpen(true)}>
                             Upload de arquivos
                         </p>
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {editarPerfilOpen && (<ModalEditarPerfil onClose={() => handleClosePerfil()}/>)}
+            {uploadOpen && (<ModalUpload onClose={() => handleCloseUpload()}/>)}
         </div>
     );
 }

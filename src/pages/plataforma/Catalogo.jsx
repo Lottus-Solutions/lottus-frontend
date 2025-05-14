@@ -46,13 +46,43 @@ export function Catalogo() {
                 </div>
             </div>
             <div className="mt-12 w-9/10 h-7/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-                <CatalogoListItem />
-                <CatalogoListItem />
-                <CatalogoListItem />
-                <CatalogoListItem />
-                <CatalogoListItem />
-                <CatalogoListItem />
-                <CatalogoListItem />
+                <CatalogoListItem 
+                    id="1"
+                    livro="Harry Potter e a Pedra Filosofal"
+                    autor="J.K. Rowling"
+                    categoria="Ficção"
+                    qtdEmprestimos={2}
+                    qtdLivros={3}
+                    status="reservado"
+                />
+                <CatalogoListItem 
+                    id="2"
+                    livro="Harry Potter e a Pedra Filosofal"
+                    autor="J.K. Rowling"
+                    categoria="Ficção"
+                    qtdEmprestimos={0}
+                    qtdLivros={3}
+                    status="disponivel"
+                />
+                <CatalogoListItem 
+                    id="3"
+                    livro="Harry Potter e a Pedra Filosofal"
+                    autor="J.K. Rowling"
+                    categoria="Ficção"
+                    qtdEmprestimos={2}
+                    qtdLivros={3}
+                    status="reservado"
+                />
+                <CatalogoListItem 
+                    id="4"
+                    livro="Harry Potter e a Pedra Filosofal"
+                    autor="J.K. Rowling"
+                    categoria="Ficção"
+                    qtdEmprestimos={0}
+                    qtdLivros={3}
+                    status="disponivel"
+                />
+                
             </div>
 
             {mostrarModal && (

@@ -4,33 +4,37 @@ import { StatusItem } from "./StatusItem";
 import { useState } from "react";
 import { ModalDetalhesLivro } from "../components/Modals/ModalDetalhesLivro";
 
-export function CatalogoListItem() {
+export function CatalogoListItem(props) {
     const [modalDetalhes, setModalDetalhes] = useState(false);
     return (
         <div className="flex gap-x-12 border-b-[1px] border-[#727272] pb-8 justify-around items-center">
             <div className="flex flex-col gap-3 w-20">
                 <p className="text-[#727272] text-xs">ID</p>
-                <p className="text-xs">0001</p>
+                <p className="text-xs">{props.id}</p>
             </div>
             <div className="flex flex-col gap-3 w-64">
                 <p className="text-[#727272] text-xs">Livro</p>
-                <p className="text-xs">Harry Potter e a Pedra Filosofal</p>
+                <p className="text-xs">{props.livro}</p>
             </div>
             <div className="flex flex-col gap-3 w-64">
                 <p className="text-[#727272] text-xs">Autor</p>
-                <p className="text-xs">J. K. Rowling</p>
+                <p className="text-xs">{props.autor}</p>
             </div>
             <div className="flex flex-col gap-3 w-24">
                 <p className="text-[#727272] text-xs">Categoria</p>
-                <p className="text-xs">Aventura</p>
+                <p className="text-xs">{props.categoria}</p>
             </div>
             <div className="flex flex-col gap-3 w-24">
                 <p className="text-[#727272] text-xs">Qtd. Livros</p>
-                <p className="text-xs">3</p>
+                <p className="text-xs">{props.qtdLivros}</p>
             </div>
-            <div className="flex flex-col gap-3 w-28">
+            <div className="flex flex-col gap-3 w-40">
                 <p className="text-[#727272] text-xs">Status</p>
-                <StatusItem />
+                {props.status === "disponivel" ? (
+                    <StatusItem status="disponivel" qtdLivros={props.qtdLivros} qtdEmprestimos={props.qtdEmprestimos}/>
+                ) : (
+                    <StatusItem status="reservado" qtdLivros={props.qtdLivros}  qtdEmprestimos={props.qtdEmprestimos}/>
+                )}
             </div>
             <div className="flex items-center gap-5">
                 <BotaoPrincipal nome="Emprestar" />
