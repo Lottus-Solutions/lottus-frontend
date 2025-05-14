@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "../configs/axiosConfig";
 import { BotaoPrincipal } from "./botoes/BotaoPrincipal";
 import { BotaoBranco } from "./botoes/BotaoBranco";
 import { ConfirmFinalizarEmprestimo } from "./Modals/ConfirmFinalizarEmprestimo";
@@ -8,6 +9,8 @@ export function EmprestimoListItem(props) {
     const [confirmModal, setShowConfirm] = useState(false);
     const [finalizarEmprestimo, setFinalizar] = useState(false);
     const [renovarEmprestimo, setRenovar] = useState(false);
+    const [loadingRenovar, setLoadingRenovar] = useState(false);
+    const [loadingFinalizar, setLoadingFinalizar] = useState(false);
 
     const handleFinalizarClick = () => {
         setShowConfirm(true);
@@ -15,13 +18,36 @@ export function EmprestimoListItem(props) {
 
     const handleConfirm = () => {
         setShowConfirm(false);
-        setFinalizar(true);
+        setLoadingFinalizar(true);
+        axios.post(`http://localhost:8080/emprestimos/${props.id}/finalizar`)
+            .then(() => {
+                setFinalizar(true);
+                if (props.atualizarLista) props.atualizarLista();
+            })
+            .catch(error => {
+                console.error("Erro ao finalizar empréstimo:", error);
+                alert("Erro ao finalizar o empréstimo.");
+            })
+            .finally(() => {
+                setLoadingFinalizar(false);
+            });
     };
 
     const handleRenovarClick = () => {
-        setRenovar(true);
-    }
-
+        setLoadingRenovar(true);
+        axios.post(`http://localhost:8080/emprestimos/${props.id}/renovar`)
+            .then(() => {
+                setRenovar(true);
+                if (props.atualizarLista) props.atualizarLista();
+            })
+            .catch(error => {
+                console.error("Erro ao renovar empréstimo:", error);
+                alert("Erro ao renovar o empréstimo.");
+            })
+            .finally(() => {
+                setLoadingRenovar(false);
+            });
+    };
 
     const diasAtraso = Number(props.diasAtraso);
 
@@ -48,8 +74,16 @@ export function EmprestimoListItem(props) {
                 </div>
 
                 <div className="flex items-center gap-6">
-                    <BotaoBranco nome="Renovar" onClick={handleRenovarClick}/>
-                    <BotaoPrincipal nome="Finalizar" onClick={handleFinalizarClick}/>
+                    <BotaoBranco
+                        nome={loadingRenovar ? "Renovando..." : "Renovar"}
+                        onClick={handleRenovarClick}
+                        disabled={loadingRenovar}
+                    />
+                    <BotaoPrincipal
+                        nome={loadingFinalizar ? "Finalizando..." : "Finalizar"}
+                        onClick={handleFinalizarClick}
+                        disabled={loadingFinalizar}
+                    />
                 </div>
             </div>
 
@@ -61,13 +95,17 @@ export function EmprestimoListItem(props) {
             )}
 
             {finalizarEmprestimo && (
-                <AlertSucesso titulo='Empréstimo Finalizado' descricao='Este livro acabou de ter o empréstimo finalizado com o aluno.'
+                <AlertSucesso
+                    titulo='Empréstimo Finalizado'
+                    descricao='Este livro acabou de ter o empréstimo finalizado com o aluno.'
                     onClose={() => setFinalizar(false)}
                 />
             )}
 
             {renovarEmprestimo && (
-                <AlertSucesso titulo='Empréstimo Renovado' descricao='Este livro acabou de ter o empréstimo renovado para daqui 15 dias.'
+                <AlertSucesso
+                    titulo='Empréstimo Renovado'
+                    descricao='Este livro acabou de ter o empréstimo renovado para daqui 15 dias.'
                     onClose={() => setRenovar(false)}
                 />
             )}
