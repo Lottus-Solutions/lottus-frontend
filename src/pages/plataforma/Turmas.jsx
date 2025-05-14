@@ -3,10 +3,7 @@ import { CardTurma } from "../../components/CardTurma";
 import { Perfil } from "../../components/Perfil";
 import axios from "../../configs/axiosConfig";
 
-
-
 export function Turmas() {
-        
     const [turmas, setTurmas] = useState([]);
 
     useEffect(() => {
@@ -14,7 +11,6 @@ export function Turmas() {
         }, []);
     
         function getTurmas() {
-    
             axios.get("/alunos/listar-turmas")
                 .then(response => {
                     setTurmas(response.data);
@@ -33,13 +29,12 @@ export function Turmas() {
             <div className="grid grid-cols-4 w-9/10 gap-6 mt-4">
             
                 {turmas.map((turmas, index) => (
-                                    <CardTurma
-                                        key={index}
-                                        id={turmas.id}
-                                        turma={turmas.serie}
-                                        
-                                    />
-                                ))}
+                    <CardTurma
+                        key={index}
+                        id={turmas.id}
+                        turma={turmas.serie}
+                    />
+                ))}
             </div>
         </div>
     )

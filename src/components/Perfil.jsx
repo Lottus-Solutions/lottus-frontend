@@ -16,7 +16,7 @@ export function Perfil() {
     };
 
     function handleCloseUpload() {
-        setEditarPerfilOpen(false); 
+        setUploadOpen(false); 
     }
 
     function handleClosePerfil() {
