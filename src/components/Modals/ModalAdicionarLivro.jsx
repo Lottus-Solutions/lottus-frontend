@@ -1,15 +1,49 @@
+import { useState } from "react";
 import { X } from "lucide-react";
 import { BotaoPrincipal } from "../botoes/BotaoPrincipal";
 import { motion } from 'framer-motion';
+import axios from "../../configs/axiosConfig";
 
 export function ModalAdicionarLivro(props) {
+    const [isbn, setIsbn] = useState("");
+    const [nome, setNome] = useState("");
+    const [autor, setAutor] = useState("");
+    const [descricao, setDescricao] = useState("");
+    // const [categoria, setCategoria] = useState("");
+    const [quantidade, setQuantidade] = useState("");
+
+    const categoria = 1;
+    const handleSalvar = (e) => {
+        e.preventDefault();
+
+        const novoLivro = {
+            nome,
+            autor,
+            categoria,
+            descricao,
+            quantidade: parseInt(quantidade),
+        };
+
+        axios.post("/livros", novoLivro)
+            .then(() => {
+                alert("Livro cadastrado com sucesso!");
+                props.onClose(); // Fecha o modal
+                if (props.atualizarLista) props.atualizarLista(); // Atualiza lista, se necessário
+            })
+            .catch(error => {
+                console.error("Erro ao adicionar livro:", error);
+                alert("Erro ao adicionar o livro.");
+            });
+    };
+
     return (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white p-10 rounded-2xl w-[600px] shadow-lg relative flex flex-col items-center justify-center">
+                className="bg-white p-10 rounded-2xl w-[600px] shadow-lg relative flex flex-col items-center justify-center"
+            >
                 <button
                     className="absolute top-8 right-8 cursor-pointer"
                     onClick={props.onClose}
@@ -21,38 +55,65 @@ export function ModalAdicionarLivro(props) {
                     <h3 className="text-xl">Adicionar um novo livro</h3>
                     <p className="text-[#727272]">Insira as informações do livro abaixo para cadastrá-lo</p>
                 </div>
-                <form className="flex flex-col gap-4 w-[80%] mb-6">
+
+                <form className="flex flex-col gap-4 w-[80%] mb-6" onSubmit={handleSalvar}>
                     <p className="text-[#414651]">ISBN</p>
                     <input
                         type="text"
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"
+                        value={isbn}
+                        onChange={(e) => setIsbn(e.target.value)}
                     />
                     <p className="text-[#414651]">Nome do livro*</p>
                     <input
                         type="text"
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"
+                        value={nome}
+                        onChange={(e) => setNome(e.target.value)}
+                        required
                     />
                     <p className="text-[#414651]">Autor do livro*</p>
                     <input
                         type="text"
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"
+                        value={autor}
+                        onChange={(e) => setAutor(e.target.value)}
+                        required
                     />
-                    <p className="text-[#414651]">Categoria*</p>
-                    <select name="Categoria" className="border border-gray-300 rounded px-2 py-[5px] text-sm outline-0">
-                        <option value="">Aventura</option>
-                        <option value="">Terror</option>
-                        <option value="">Ficção</option>
-                        <option value="">Infantil</option>
-                    </select>
-                    <p className="text-[#414651]">Quantidade de livros*</p>
+                    <p className="text-[#414651]">Descrição*</p>
                     <input
                         type="text"
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"
+                        value={descricao}
+                        onChange={(e) => setDescricao(e.target.value)}
+                        required
                     />
-                </form>
+                    <p className="text-[#414651]">Categoria*</p>
+                    <select
+                        value={categoria}
+                        onChange={(e) => setCategoria(e.target.value)}
+                        className="border border-gray-300 rounded px-2 py-[5px] text-sm outline-0"
+                        required
+                    >
+                        <option value="">Selecione</option>
+                        <option value="Aventura">Aventura</option>
+                        <option value="Terror">Terror</option>
+                        <option value="Ficção">Ficção</option>
+                        <option value="Infantil">Infantil</option>
+                    </select>
+                    <p className="text-[#414651]">Quantidade de livros*</p>
+                    <input
+                        type="number"
+                        className="border border-gray-300 rounded px-2 py-[5px] text-sm"
+                        value={quantidade}
+                        onChange={(e) => setQuantidade(e.target.value)}
+                        required
+                        min="1"
+                    />
 
-                <BotaoPrincipal nome="Salvar" />
+                    <BotaoPrincipal nome="Salvar" />
+                </form>
             </motion.div>
         </div>
-    )
+    );
 }

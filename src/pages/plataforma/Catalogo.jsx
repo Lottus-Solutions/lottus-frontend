@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChartColumnStacked, Filter } from "lucide-react";
 import { BotaoPrincipal } from "../../components/botoes/BotaoPrincipal";
 import { CatalogoListItem } from "../../components/CatalogoListItem";
@@ -6,10 +6,27 @@ import { Perfil } from "../../components/Perfil";
 import { Search } from "../../components/Search";
 import { ModalAdicionarLivro } from "../../components/Modals/ModalAdicionarLivro";
 import { ModalCategorias } from "../../components/Modals/ModalCategorias";
+import axios from "../../configs/axiosConfig";
 
 export function Catalogo() {
     const [adicionarLivro, setAdicionarLivro] = useState(false);
     const [modalCategorias, setModalCategorias] = useState(false);
+    const [livros, setLivros] = useState([]);
+
+    const buscarLivros = () => {
+        axios.get("/livros")
+            .then(response => {
+                setLivros(response.data);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar livros:", error);
+                alert("Erro ao carregar o catálogo.");
+            });
+    };
+
+    useEffect(() => {
+        buscarLivros();
+    }, []);
 
     return (
         <div className="h-screen pt-16 pl-16 relative">
@@ -48,48 +65,27 @@ export function Catalogo() {
                     </div>
                 </div>
             </div>
+
             <div className="mt-12 w-9/10 h-7/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-                <CatalogoListItem 
-                    id="1"
-                    livro="Harry Potter e a Pedra Filosofal"
-                    autor="J.K. Rowling"
-                    categoria="Ficção"
-                    qtdEmprestimos={2}
-                    qtdLivros={3}
-                    status="reservado"
-                />
-                <CatalogoListItem 
-                    id="2"
-                    livro="Harry Potter e a Pedra Filosofal"
-                    autor="J.K. Rowling"
-                    categoria="Ficção"
-                    qtdEmprestimos={0}
-                    qtdLivros={3}
-                    status="disponivel"
-                />
-                <CatalogoListItem 
-                    id="3"
-                    livro="Harry Potter e a Pedra Filosofal"
-                    autor="J.K. Rowling"
-                    categoria="Ficção"
-                    qtdEmprestimos={2}
-                    qtdLivros={3}
-                    status="reservado"
-                />
-                <CatalogoListItem 
-                    id="4"
-                    livro="Harry Potter e a Pedra Filosofal"
-                    autor="J.K. Rowling"
-                    categoria="Ficção"
-                    qtdEmprestimos={0}
-                    qtdLivros={3}
-                    status="disponivel"
-                />
-                
+                {livros.map(livro => (
+                    <CatalogoListItem
+                        key={livro.id}
+                        id={livro.id}
+                        livro={livro.nome}
+                        autor={livro.autor}
+                        categoria={livro.categoria}
+                        qtdEmprestimos={livro.qtdEmprestimos || 0}
+                        qtdLivros={livro.quantidade}
+                        status={livro.status?.toLowerCase() || "disponivel"}
+                    />
+                ))}
             </div>
 
             {adicionarLivro && (
-                <ModalAdicionarLivro onClose={() => setAdicionarLivro(false)} />
+                <ModalAdicionarLivro 
+                    onClose={() => setAdicionarLivro(false)} 
+                    atualizarLista={buscarLivros}
+                />
             )}
             {modalCategorias && (
                 <ModalCategorias onClose={() => setModalCategorias(false)} />
