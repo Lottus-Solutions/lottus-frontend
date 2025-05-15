@@ -54,7 +54,7 @@ export function EmprestimoListItem(props) {
     return (
         <div className="relative">
             <div className="flex gap-x-12 border-b-[1px] border-[#727272] pb-8 justify-around">
-                <div className="flex flex-col gap-3 w-56">
+                <div className="flex flex-col gap-3 w-56 ml-5">
                     <p className="text-[#727272] text-xs">Aluno</p>
                     <p className="text-xs">{props.aluno}</p>
                 </div>
@@ -73,7 +73,7 @@ export function EmprestimoListItem(props) {
                     </p>
                 </div>
 
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-6 mr-5">
                     <BotaoBranco
                         nome={loadingRenovar ? "Renovando..." : "Renovar"}
                         onClick={handleRenovarClick}

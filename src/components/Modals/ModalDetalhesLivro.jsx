@@ -1,8 +1,14 @@
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { UltimosLeitoresListItem } from '../UltimosLeitoresListItem';
+import { ConfirmExcluirLivro } from './ConfirmExcluirLivro';
+import { useState } from 'react';
+import { ModalEditarLivro } from './ModalEditarLivro';
 
 export function ModalDetalhesLivro(props) {
+    const [confirmExcluir, setConfirmExcluir] = useState(false)
+    const [ModalEditarLivroOpen, setModalEditarOpen] = useState(false)
+
     return (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
             <motion.div
@@ -33,8 +39,9 @@ export function ModalDetalhesLivro(props) {
                         <p className='text-sm text-[#727272]'>Harry Potter e a Câmara Secreta é o segundo livro da série escrita por J.K. Rowling. Nele, Harry retorna a Hogwarts para seu segundo ano, mas logo eventos estranhos começam a acontecer: alunos estão sendo petrificados e uma mensagem assustadora aparece nas paredes do castelo, alertando sobre a abertura da lendária Câmara Secreta. Com a ajuda de Rony e Hermione, Harry investiga a origem do perigo e precisa enfrentar um grande mistério que envolve monstros, magia antiga e segredos do passado da escola.
                         </p>
                     </div>
-                    <div>
-                        
+                    <div className='absolute bottom-10 flex gap-4'>
+                        <img src="/images/edit-circle.svg" alt="Editar" className='cursor-pointer' onClick={() => setModalEditarOpen(true)}/>
+                        <img src="/images/delete-circle.svg" alt="Excluir" className='cursor-pointer' onClick={() => setConfirmExcluir(true)}/>
                     </div>
 
                 </div>
@@ -54,6 +61,11 @@ export function ModalDetalhesLivro(props) {
                     </div>
                 </div>
             </motion.div>
+
+            
+            {confirmExcluir && (<ConfirmExcluirLivro onClose={() => setConfirmExcluir(false)}/>)}
+            {ModalEditarLivroOpen && (<ModalEditarLivro onClose={() => setModalEditarOpen(false)}/>)}
+            
         </div>
     )
 }

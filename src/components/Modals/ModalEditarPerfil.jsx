@@ -1,8 +1,29 @@
 import { X } from "lucide-react";
 import { BotaoPrincipal } from "../botoes/BotaoPrincipal";
 import { motion } from 'framer-motion';
+import { useEffect, useState } from "react";
+import axios from "../../configs/axiosConfig.js"
 
 export function ModalEditarPerfil(props) {
+    const [nomeUsuario, setNomeUsuario] = useState(""); 
+    const [emailUsuario, setEmailUsuario] = useState("");
+
+    function getDadosUsuario() {
+        axios.get('/usuarios/me')
+            .then(response => {
+                setNomeUsuario(response.data.nome);
+                setEmailUsuario(response.data.email);
+            })
+            .catch(error => {
+                console.error("Erro ao obter dados do usuário:", error);
+            });
+    }
+
+    useEffect(() => {
+        getDadosUsuario(); 
+    }, []);
+
+
     return (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
             <motion.div
@@ -31,14 +52,16 @@ export function ModalEditarPerfil(props) {
                     <input
                         type="text"
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"
+                        placeholder={nomeUsuario}
                     />
                     <p className="text-[#414651]">Alterar email</p>
                     <input
                         type="email"
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"
+                        placeholder={emailUsuario}
                     />
 
-                    <p className="text-[#414651]">Alterar senha</p>
+                    <p className="text-[#414651]">Nova senha</p>
                     <input
                         type="password"
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"

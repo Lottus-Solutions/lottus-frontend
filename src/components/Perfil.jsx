@@ -15,13 +15,6 @@ export function Perfil() {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
-    function handleCloseUpload() {
-        setUploadOpen(false); 
-    }
-
-    function handleClosePerfil() {
-        setEditarPerfilOpen(false); 
-    }
 
     function getDadosUsuario() {
         axios.get('/usuarios/me')
@@ -66,14 +59,14 @@ export function Perfil() {
                             Upload de arquivos
                         </p>
                         <p className="text-sm text-[#727272] cursor-pointer hover:text-[#0292B7] transition-colors">
-                            Finalizar semestre
+                            Renovar semestre
                         </p>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            {editarPerfilOpen && (<ModalEditarPerfil onClose={() => handleClosePerfil()}/>)}
-            {uploadOpen && (<ModalUpload onClose={() => handleCloseUpload()}/>)}
+            {editarPerfilOpen && (<ModalEditarPerfil onClose={() => setEditarPerfilOpen(false)}/>)}
+            {uploadOpen && (<ModalUpload onClose={() => setUploadOpen(false)}/>)}
         </div>
     );
 }

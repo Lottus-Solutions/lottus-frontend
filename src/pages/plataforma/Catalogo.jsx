@@ -5,9 +5,11 @@ import { CatalogoListItem } from "../../components/CatalogoListItem";
 import { Perfil } from "../../components/Perfil";
 import { Search } from "../../components/Search";
 import { ModalAdicionarLivro } from "../../components/Modals/ModalAdicionarLivro";
+import { ModalCategorias } from "../../components/Modals/ModalCategorias";
 
 export function Catalogo() {
-    const [mostrarModal, setMostrarModal] = useState(false);
+    const [adicionarLivro, setAdicionarLivro] = useState(false);
+    const [modalCategorias, setModalCategorias] = useState(false);
 
     return (
         <div className="h-screen pt-16 pl-16 relative">
@@ -37,10 +39,11 @@ export function Catalogo() {
                     <button
                         className="rounded-full h-9 w-9 flex items-center justify-center border-2 border-[#0292B7] cursor-pointer"
                         title="Ver categorias"
+                        onClick={() => setModalCategorias(true)}
                     >
                         <ChartColumnStacked className="w-5 h-5 text-[#0292B7]" />
                     </button>
-                    <div onClick={() => setMostrarModal(true)}>
+                    <div onClick={() => setAdicionarLivro(true)}>
                         <BotaoPrincipal nome="Adicionar Livro" />
                     </div>
                 </div>
@@ -85,8 +88,11 @@ export function Catalogo() {
                 
             </div>
 
-            {mostrarModal && (
-                <ModalAdicionarLivro onClose={() => setMostrarModal(false)} />
+            {adicionarLivro && (
+                <ModalAdicionarLivro onClose={() => setAdicionarLivro(false)} />
+            )}
+            {modalCategorias && (
+                <ModalCategorias onClose={() => setModalCategorias(false)} />
             )}
         </div>
     );
