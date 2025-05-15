@@ -41,7 +41,7 @@ export function CatalogoListItem(props) {
                     <StatusItem status="reservado" qtdLivros={props.qtdLivros} qtdEmprestimos={props.qtdEmprestimos} />
                 )}
             </div>
-            <div className="flex items-center gap-5 mr-5">
+            <div className="flex items-center gap-5 mr-5 mt-5">
                 {props.status === "disponivel" && props.qtdLivros > 0 ? (
                     <BotaoPrincipal nome="Emprestar" onClick={() => setModalEmprestimo(true)} />
                 ) : (
