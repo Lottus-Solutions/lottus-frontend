@@ -54,7 +54,7 @@ export function App() {
           <Route path="/emprestimos" element={<Emprestimos />} />
           <Route path="/catalogo" element={<Catalogo />} />
           <Route path="/turmas" element={<Turmas />} />
-          <Route path="/alunos" element={<Alunos />} />
+          <Route path="/turma/:id" element={<Alunos />} />
         </Route>
 
       </Routes>
