@@ -24,19 +24,19 @@ export function ModalDetalhesLivro(props) {
                 </button>
                 <div className='flex flex-col gap-6 w-1/3 max-h-full'>
                     <div className='flex flex-col gap-2'>
-                        <h2 className="text-[#0292B7] text-xl font-semibold">Harry Potter e a Câmara Secreta</h2>
-                        <p className='text-base'>J. K Rowling</p>
+                        <h2 className="text-[#0292B7] text-xl font-semibold">{props.livro}</h2>
+                        <p className='text-base'>{props.autor}</p>
                     </div>
                     <div className='bg-[#0292B7] w-fit px-7 py-1 rounded-full flex items-center justify-center'>
-                        <p className='text-sm text-white'>Aventura</p>
+                        <p className='text-sm text-white'>{props.categoria}</p>
                     </div>
                     <div className='flex flex-col gap-2'>
-                        <p className='text-sm flex items-center gap-1'>Quantidade: <p className='text-sm text-[#727272]'>3</p></p>
-                        <p className='text-sm flex items-center gap-1'>Reservado: <p className='text-sm text-[#727272]'>2/3</p></p>
+                        <p className='text-sm flex items-center gap-1'>Quantidade: <p className='text-sm text-[#727272]'>{props.quantidade}</p></p>
+                        <p className='text-sm flex items-center gap-1'>Reservados: <p className='text-sm text-[#727272]'>{props.reservados}</p></p>
                     </div>
                     <div className='flex flex-col gap-2 w-[80%]'>
                         <p className='text-sm'>Descrição:</p>
-                        <p className='text-sm text-[#727272]'>Harry Potter e a Câmara Secreta é o segundo livro da série escrita por J.K. Rowling. Nele, Harry retorna a Hogwarts para seu segundo ano, mas logo eventos estranhos começam a acontecer: alunos estão sendo petrificados e uma mensagem assustadora aparece nas paredes do castelo, alertando sobre a abertura da lendária Câmara Secreta. Com a ajuda de Rony e Hermione, Harry investiga a origem do perigo e precisa enfrentar um grande mistério que envolve monstros, magia antiga e segredos do passado da escola.
+                        <p className='text-sm text-[#727272]'>{props.descricao}
                         </p>
                     </div>
                     <div className='absolute bottom-10 flex gap-4'>

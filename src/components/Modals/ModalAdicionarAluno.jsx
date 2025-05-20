@@ -1,8 +1,27 @@
 import { X } from "lucide-react";
 import { BotaoPrincipal } from "../botoes/BotaoPrincipal";
 import { motion } from 'framer-motion';
+import { useEffect, useState } from "react";
+import axios from "../../configs/axiosConfig";
 
 export function ModalAdicionarAluno(props) {
+    const [turmas, setTurmas] = useState([]);
+
+    useEffect(() => {
+        getTurmas();
+    }, []);
+
+    function getTurmas() {
+        axios.get("/alunos/listar-turmas")
+            .then(response => {
+                setTurmas(response.data);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar turmas:", error);
+            });
+    }
+
     return (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
             <motion.div
@@ -27,32 +46,13 @@ export function ModalAdicionarAluno(props) {
                         type="text"
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"
                     />
-                    <p className="text-[#414651]">Matricula*</p>
-                    <input
-                        type="text"
-                        className="border border-gray-300 rounded px-2 py-[5px] text-sm"
-                    />
-                    <p className="text-[#414651]">Grau*</p>
-                    <div className="flex gap-4 mt-4">
-                        <div className="flex gap-2">
-                            <input type="checkbox" />
-                            <p className="text-[#727272] text-xs">1° Fundamental</p>
-                        </div>
-                        <div className="flex gap-2">
-                            <input type="checkbox" />
-                            <p className="text-[#727272] text-xs">2° Fundamental</p>
-                        </div>
-                        <div className="flex gap-2">
-                            <input type="checkbox" />
-                            <p className="text-[#727272] text-xs">Ensino Médio</p>
-                        </div>
-                    </div>
                     <select name="Turma" className="border border-gray-300 rounded px-2 py-[5px] text-sm outline-0 mt-4 mb-4">
                         <option value="">Selecione uma turma</option>
-                        <option value="">1° Ano</option>
-                        <option value="">2° Ano</option>
-                        <option value="">3° Ano</option>
-                        <option value="">4° Ano</option>
+                        {turmas.map((turmas, index) => (
+                            <option value={turmas.id}
+                                key={index}
+                            >{turmas.serie}</option>
+                        ))}
                     </select>
 
 

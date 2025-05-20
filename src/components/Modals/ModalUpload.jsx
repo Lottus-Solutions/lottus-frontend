@@ -1,19 +1,22 @@
 import { useState } from "react";
-import { Upload, X, File } from "lucide-react";
+import { Upload, X, File, Loader2 } from "lucide-react";
 import { BotaoPrincipal } from "../botoes/BotaoPrincipal";
 import { motion } from 'framer-motion';
 
 export function ModalUpload(props) {
   const [error, setError] = useState("");
+  const [mensagemSucesso, setMensagemSucesso] = useState("");
   const [arquivoSelecionado, setArquivoSelecionado] = useState(null);
-  const [finalidadeSelecionada, setFinalidadeSelecionada] = useState(""); // 'alunos' ou 'catalogo'
-  const [acaoAlunos, setAcaoAlunos] = useState(""); // 'adicionar' ou 'sobrescrever'
+  const [finalidadeSelecionada, setFinalidadeSelecionada] = useState("");
+  const [acaoAlunos, setAcaoAlunos] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleArquivoChange = (e) => {
     const file = e.target.files[0];
     if (file && (file.name.endsWith(".csv") || file.name.endsWith(".xlsx"))) {
       setArquivoSelecionado(file);
       setError("");
+      setMensagemSucesso("");
     } else {
       setError("Por favor, selecione um arquivo .CSV ou .XLSX válido.");
       e.target.value = null;
@@ -22,9 +25,13 @@ export function ModalUpload(props) {
 
   const handleExcluirArquivo = () => {
     setArquivoSelecionado(null);
+    setMensagemSucesso("");
   };
 
   const handleUpload = async () => {
+    setMensagemSucesso("");
+    setError("");
+
     if (!finalidadeSelecionada) {
       setError("Selecione a finalidade do upload (Alunos ou Catálogo).");
       return;
@@ -40,10 +47,9 @@ export function ModalUpload(props) {
       return;
     }
 
-    setError("");
+    setIsLoading(true);
 
     const token = localStorage.getItem("token");
-
     const formData = new FormData();
     formData.append("arquivo", arquivoSelecionado);
     formData.append("finalidade", finalidadeSelecionada);
@@ -56,25 +62,23 @@ export function ModalUpload(props) {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
-          // NÃO colocar 'Content-Type': multipart/form-data, o navegador seta isso automaticamente com boundary
         },
         body: formData,
       });
 
-      if (!response.ok) {
-        const data = await response.json();
-        setError(data.erro || "Erro ao enviar arquivo.");
-        return;
-      }
-
       const data = await response.json();
-      alert(data.mensagem || "Upload realizado com sucesso!");
-      console.log(formData);
-      props.onClose(); // Fecha modal após sucesso
 
+      if (!response.ok) {
+        setError(data.erro || "Erro ao enviar arquivo.");
+      } else {
+        setMensagemSucesso(data.mensagem || "Upload realizado com sucesso!");
+        setArquivoSelecionado(null); // limpa o arquivo após upload
+      }
     } catch (err) {
       setError("Erro ao conectar com o servidor.");
       console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -108,7 +112,7 @@ export function ModalUpload(props) {
                 checked={finalidadeSelecionada === "alunos"}
                 onChange={(e) => {
                   setFinalidadeSelecionada(e.target.value);
-                  setAcaoAlunos(""); // resetar subopção ao trocar
+                  setAcaoAlunos("");
                 }}
               />
               <span className="text-[#727272] text-sm">Alunos</span>
@@ -139,7 +143,7 @@ export function ModalUpload(props) {
                   checked={acaoAlunos === "adicionar"}
                   onChange={(e) => setAcaoAlunos(e.target.value)}
                 />
-                <span className="text-xs text-zinc-600">Adicionar novos alunos </span>
+                <span className="text-xs text-zinc-600">Adicionar novos alunos</span>
               </label>
               <label className="flex items-center gap-2">
                 <input
@@ -157,6 +161,12 @@ export function ModalUpload(props) {
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-500 px-4 py-2 rounded w-full text-sm mt-3">
               {error}
+            </div>
+          )}
+
+          {mensagemSucesso && (
+            <div className="bg-green-100 border border-green-400 text-green-600 px-4 py-2 rounded w-full text-sm mt-3">
+              {mensagemSucesso}
             </div>
           )}
 
@@ -194,7 +204,20 @@ export function ModalUpload(props) {
 
           <div className="flex gap-4 w-full justify-center mt-5">
             <BotaoPrincipal nome="Baixar Template" />
-            <BotaoPrincipal nome="Fazer Upload" onClick={handleUpload} />
+            <button
+              onClick={handleUpload}
+              disabled={isLoading}
+              className={`min-w-30 w-fit h-9 flex items-center justify-center px-4 rounded-full bg-[#0292B7] border-[1px] border-[#0292B7] text-white cursor-pointer text-xs ${isLoading && "opacity-70 cursor-not-allowed"}`}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="animate-spin w-4 h-4 mr-2" />
+                  Carregando...
+                </>
+              ) : (
+                "Fazer Upload"
+              )}
+            </button>
           </div>
         </div>
       </motion.div>

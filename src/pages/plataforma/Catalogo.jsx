@@ -13,8 +13,9 @@ export function Catalogo() {
     const [modalCategorias, setModalCategorias] = useState(false);
     const [livros, setLivros] = useState([]);
     const [busca, setBusca] = useState("");
+    const [categorias, setCategorias] = useState([]);
 
-    
+
     // Carrega todos os livros
     const buscarLivros = () => {
         axios.get("/livros")
@@ -23,22 +24,31 @@ export function Catalogo() {
             })
             .catch(error => {
                 console.error("Erro ao buscar livros:", error);
-                alert("Erro ao carregar o catálogo.");
             });
     };
 
+    const buscarCategorias = () => {
+        axios.get("/categorias")
+            .then(response => {
+                setCategorias(response.data);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar categorias:", error);
+            });
+    };
+
+
     // Filtra livros com base na busca
     const buscarLivrosFiltrados = () => {
-       
-            axios.get(`/livros/buscar/${encodeURIComponent(busca)}`)
-                .then(response => {
-                    setLivros(response.data);
-                })
-                .catch(error => {
-                    console.error("Erro ao buscar livros:", error);
-                    alert("Erro ao buscar livros.");
-                });
-        
+
+        axios.get(`/livros/buscar/${encodeURIComponent(busca)}`)
+            .then(response => {
+                setLivros(response.data);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar livros:", error);
+            });
+
     };
 
     useEffect(() => {
@@ -47,7 +57,12 @@ export function Catalogo() {
         } else {
             buscarLivros();
         }
-    }, [ busca]);
+    }, [busca]);
+
+    useEffect(() => {
+    buscarCategorias();
+}, []);
+
 
     return (
         <div className="h-screen pt-16 pl-16 relative">
@@ -66,13 +81,18 @@ export function Catalogo() {
                 />
                 <div className="flex gap-4">
                     <div className="relative inline-block">
-                        <select name="Categoria" className="w-28 border-[#727272] text-[#727272] border-[1px] rounded-full px-4 pr-8 outline-0 text-xs h-9 appearance-none">
+                        <select
+                            name="Categoria"
+                            className="w-fit border-[#727272] text-[#727272] border-[1px] rounded-full pl-3 pr-8 outline-0 text-xs h-9 appearance-none"
+                        >
                             <option value="">Categorias</option>
-                            <option value="">Aventura</option>
-                            <option value="">Terror</option>
-                            <option value="">Ficção</option>
-                            <option value="">Infantil</option>
+                            {categorias.map((categoria) => (
+                                <option key={categoria.id} value={categoria.nome}>
+                                    {categoria.nome}
+                                </option>
+                            ))}
                         </select>
+
                         <Filter className="absolute top-1/2 right-3 -translate-y-1/2 text-[#727272]" size={14} />
                     </div>
                     <div className="relative inline-block">
@@ -112,8 +132,8 @@ export function Catalogo() {
             </div>
 
             {adicionarLivro && (
-                <ModalAdicionarLivro 
-                    onClose={() => setAdicionarLivro(false)} 
+                <ModalAdicionarLivro
+                    onClose={() => setAdicionarLivro(false)}
                     atualizarLista={buscarLivros}
                 />
             )}

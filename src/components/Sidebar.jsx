@@ -3,9 +3,7 @@ import {
   Repeat2,
   Book,
   Users,
-  ChartBarStacked,
-  LogOut,
-  CircleUser,
+  LogOut
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -71,7 +69,7 @@ export function Sidebar() {
             nome="Turmas"
             rota="/turmas"
             Icon={Users}
-            ativo={location.pathname === "/turmas" || location.pathname === "/alunos"}
+            ativo={location.pathname.startsWith("/turma")}
             onClick={navegar}
           />
         </div>

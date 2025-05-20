@@ -2,8 +2,28 @@ import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { CategoriaListItem } from '../SiteComponents/CategoriaListItem';
 import { BotaoPrincipal } from '../botoes/BotaoPrincipal';
+import { useEffect, useState } from 'react';
+import axios from '../../configs/axiosConfig';
+
 
 export function ModalCategorias(props) {
+    const [categorias, setCategorias] = useState([]);
+
+    const buscarCategorias = () => {
+        axios.get("/categorias")
+            .then((response) => {
+                setCategorias(response.data);
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar categorias:", error);
+            });
+    };
+
+    useEffect(() => {
+        buscarCategorias();
+    }, []);
+
+
     return (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
             <motion.div
@@ -22,21 +42,16 @@ export function ModalCategorias(props) {
                         <h2 className="text-[#0292B7] text-2xl font-semibold">Categorias Cadastradas</h2>
                     </div>
                     <div className='w-[100%] mt-6 h-8/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar'>
-                        <CategoriaListItem />
-                        <CategoriaListItem />
-                        <CategoriaListItem />
-                        <CategoriaListItem />
-                        <CategoriaListItem />
-                        <CategoriaListItem />
-                        <CategoriaListItem />
-                        <CategoriaListItem />
-                        <CategoriaListItem />
-                        <CategoriaListItem />
-                        <CategoriaListItem />
-                        <CategoriaListItem />
-                        <CategoriaListItem />
+                        {categorias.map((categoria) => (
+                            <CategoriaListItem
+                                key={categoria.id}
+                                nome={categoria.nome}
+                                descricao={categoria.descricao}
+                            />
+                        ))}
                     </div>
-                    <BotaoPrincipal nome="Adicionar Categoria"/>
+
+                    <BotaoPrincipal nome="Adicionar Categoria" />
                 </div>
 
             </motion.div>

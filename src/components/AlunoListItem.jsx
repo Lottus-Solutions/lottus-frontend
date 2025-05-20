@@ -1,14 +1,10 @@
 import { BotaoPrincipal } from "./botoes/BotaoPrincipal";
 import { ProgressoLeitura } from "./ProgressoLeitura";
 
-export function AlunoListItem({ matricula, nome, livrosLidos, livrosTotais, bonus, livroAtual }) {
+export function AlunoListItem({ nome, livrosLidos, livrosTotais, bonus, livroAtual }) {
     return (
         <div className="flex gap-x-12 border-b-[1px] border-[#727272] pb-8 justify-around items-center">
-            <div className="flex flex-col gap-3 w-16">
-                <p className="text-[#727272] text-xs">Matrícula</p>
-                <p className="text-xs">{matricula}</p>
-            </div>
-            <div className="flex flex-col gap-3 w-64">
+            <div className="flex flex-col gap-3 w-64 ml-5">
                 <p className="text-[#727272] text-xs">Nome</p>
                 <p className="text-xs">{nome}</p>
             </div>
@@ -23,7 +19,9 @@ export function AlunoListItem({ matricula, nome, livrosLidos, livrosTotais, bonu
                 <p className="text-[#727272] text-xs">Livro Atual</p>
                 <p className="text-xs">{livroAtual}</p>
             </div>
+            <div className="mr-5">
             <BotaoPrincipal nome="Acessar Perfil" />
+            </div>
         </div>
     );
 }

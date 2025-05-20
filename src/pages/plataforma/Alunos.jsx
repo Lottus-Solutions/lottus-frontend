@@ -31,7 +31,7 @@ export function Alunos() {
             <p className="text-base text-[#0292B7] mb-10">{nomeTurma}</p>
 
             <div className="flex justify-between w-9/10">
-                <Search placeholder="Busque por matrícula ou nome" />
+                <Search placeholder="Busque por nome" />
                 <div onClick={() => setMostrarModal(true)}>
                     <BotaoPrincipal nome="Adicionar Aluno" />
                 </div>
