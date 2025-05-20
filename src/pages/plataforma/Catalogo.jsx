@@ -12,7 +12,10 @@ export function Catalogo() {
     const [adicionarLivro, setAdicionarLivro] = useState(false);
     const [modalCategorias, setModalCategorias] = useState(false);
     const [livros, setLivros] = useState([]);
+    const [busca, setBusca] = useState("");
 
+    
+    // Carrega todos os livros
     const buscarLivros = () => {
         axios.get("/livros")
             .then(response => {
@@ -24,16 +27,43 @@ export function Catalogo() {
             });
     };
 
+    // Filtra livros com base na busca
+    const buscarLivrosFiltrados = () => {
+       
+            axios.get(`/livros/buscar/${encodeURIComponent(busca)}`)
+                .then(response => {
+                    setLivros(response.data);
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar livros:", error);
+                    alert("Erro ao buscar livros.");
+                });
+        
+    };
+
     useEffect(() => {
-        buscarLivros();
-    }, []);
+        if (busca.trim() !== "") {
+            buscarLivrosFiltrados();
+        } else {
+            buscarLivros();
+        }
+    }, [ busca]);
 
     return (
         <div className="h-screen pt-16 pl-16 relative">
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Catálogo</h2>
             <div className="flex justify-between w-9/10">
-                <Search placeholder="Busque por livro, autor ou ID" />
+                <Search
+                    placeholder="Busque por livro, autor ou ID"
+                    value={busca}
+                    onChange={(e) => setBusca(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            buscarLivrosFiltrados();
+                        }
+                    }}
+                />
                 <div className="flex gap-4">
                     <div className="relative inline-block">
                         <select name="Categoria" className="w-28 border-[#727272] text-[#727272] border-[1px] rounded-full px-4 pr-8 outline-0 text-xs h-9 appearance-none">
@@ -49,7 +79,7 @@ export function Catalogo() {
                         <select name="Status" className="w-28 border-[#727272] text-[#727272] border-[1px] rounded-full px-4 pr-8 outline-0 text-xs h-9 appearance-none">
                             <option value="">Status</option>
                             <option value="">Reservado</option>
-                            <option value="">Disponivel</option>
+                            <option value="">Disponível</option>
                         </select>
                         <Filter className="absolute top-1/2 right-3 -translate-y-1/2 text-[#727272]" size={14} />
                     </div>
@@ -76,7 +106,7 @@ export function Catalogo() {
                         categoria={livro.categoria}
                         qtdEmprestimos={livro.qtdEmprestimos || 0}
                         qtdLivros={livro.quantidade}
-                        status={livro.status?.toLowerCase() || "disponivel"}
+                        status={livro.status?.toLowerCase() || "disponível"}
                     />
                 ))}
             </div>
