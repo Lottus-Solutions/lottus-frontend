@@ -14,9 +14,8 @@ export function Catalogo() {
     const [livros, setLivros] = useState([]);
     const [busca, setBusca] = useState("");
     const [categorias, setCategorias] = useState([]);
+    const [categoriaSelecionadaId, setCategoriaSelecionadaId] = useState("");
 
-
-    // Carrega todos os livros
     const buscarLivros = () => {
         axios.get("/livros")
             .then(response => {
@@ -37,10 +36,7 @@ export function Catalogo() {
             });
     };
 
-
-    // Filtra livros com base na busca
     const buscarLivrosFiltrados = () => {
-
         axios.get(`/livros/buscar/${encodeURIComponent(busca)}`)
             .then(response => {
                 setLivros(response.data);
@@ -48,8 +44,26 @@ export function Catalogo() {
             .catch(error => {
                 console.error("Erro ao buscar livros:", error);
             });
-
     };
+
+    const filtrarPorCategoria = (idCategoria) => {
+    if (idCategoria === "") {
+        buscarLivros(); // volta à lista completa
+    } else {
+        axios.get("/livros/filtrar-por-categoria", {
+            params: {
+                categoriaIds: idCategoria 
+            }
+        })
+        .then(response => {
+            setLivros(response.data);
+        })
+        .catch(error => {
+            console.error("Erro ao filtrar livros:", error);
+        });
+    }
+};
+
 
     useEffect(() => {
         if (busca.trim() !== "") {
@@ -60,9 +74,12 @@ export function Catalogo() {
     }, [busca]);
 
     useEffect(() => {
-    buscarCategorias();
-}, []);
+        buscarCategorias();
+    }, []);
 
+    useEffect(() => {
+        filtrarPorCategoria(categoriaSelecionadaId);
+    }, [categoriaSelecionadaId]);
 
     return (
         <div className="h-screen pt-16 pl-16 relative">
@@ -84,15 +101,16 @@ export function Catalogo() {
                         <select
                             name="Categoria"
                             className="w-fit border-[#727272] text-[#727272] border-[1px] rounded-full pl-3 pr-8 outline-0 text-xs h-9 appearance-none"
+                            value={categoriaSelecionadaId}
+                            onChange={(e) => setCategoriaSelecionadaId(e.target.value)}
                         >
                             <option value="">Categorias</option>
                             {categorias.map((categoria) => (
-                                <option key={categoria.id} value={categoria.nome}>
+                                <option key={categoria.id} value={categoria.id}>
                                     {categoria.nome}
                                 </option>
                             ))}
                         </select>
-
                         <Filter className="absolute top-1/2 right-3 -translate-y-1/2 text-[#727272]" size={14} />
                     </div>
                     <div className="relative inline-block">

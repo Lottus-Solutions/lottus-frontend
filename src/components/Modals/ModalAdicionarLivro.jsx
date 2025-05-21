@@ -1,43 +1,67 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { BotaoPrincipal } from "../botoes/BotaoPrincipal";
 import { motion } from 'framer-motion';
 import axios from "../../configs/axiosConfig";
+import { AlertSucesso } from "../Alerts/AlertSucesso";
 
 export function ModalAdicionarLivro(props) {
-    const [isbn, setIsbn] = useState("");
+    const [isbn, setIsbn] = useState(""); // ignorado no envio
     const [nome, setNome] = useState("");
     const [autor, setAutor] = useState("");
     const [descricao, setDescricao] = useState("");
-    // const [categoria, setCategoria] = useState("");
+    const [categorias, setCategorias] = useState([]);
+    const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
     const [quantidade, setQuantidade] = useState("");
+    const [alert, setAlert] = useState(false);
 
-    const categoria = 1;
+    useEffect(() => {
+        axios.get("/categorias")
+            .then(response => {
+                setCategorias(response.data);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar categorias:", error);
+            });
+    }, []);
+
     const handleSalvar = (e) => {
         e.preventDefault();
 
         const novoLivro = {
-            nome,
-            autor,
-            categoria,
-            descricao,
+            nome: nome.trim(),
+            autor: autor.trim(),
             quantidade: parseInt(quantidade),
+            categoriaId: parseInt(categoriaSelecionada),
+            descricao: descricao.trim(),
         };
 
         axios.post("/livros", novoLivro)
             .then(() => {
-                alert("Livro cadastrado com sucesso!");
-                props.onClose(); // Fecha o modal
-                if (props.atualizarLista) props.atualizarLista(); // Atualiza lista, se necessário
+                setAlert(true);
+
+                setTimeout(() => {
+                    setAlert(false);
+                    props.onClose();
+                    if (props.atualizarLista) props.atualizarLista();
+                }, 1000);
             })
             .catch(error => {
                 console.error("Erro ao adicionar livro:", error);
-                alert("Erro ao adicionar o livro.");
+
             });
     };
 
     return (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+            {alert && (
+                <AlertSucesso
+                    onClose={() => setAlert(false)}
+                    titulo="Novo livro adicionado."
+                    descricao="O livro agora faz parte do acervo da biblioteca e já pode ser consultado no catálogo."
+                />
+            )}
+
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -63,6 +87,7 @@ export function ModalAdicionarLivro(props) {
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"
                         value={isbn}
                         onChange={(e) => setIsbn(e.target.value)}
+                        disabled // desabilitado por enquanto
                     />
                     <p className="text-[#414651]">Nome do livro*</p>
                     <input
@@ -90,16 +115,17 @@ export function ModalAdicionarLivro(props) {
                     />
                     <p className="text-[#414651]">Categoria*</p>
                     <select
-                        value={categoria}
-                        onChange={(e) => setCategoria(e.target.value)}
+                        value={categoriaSelecionada}
+                        onChange={(e) => setCategoriaSelecionada(e.target.value)}
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm outline-0"
                         required
                     >
                         <option value="">Selecione</option>
-                        <option value="Aventura">Aventura</option>
-                        <option value="Terror">Terror</option>
-                        <option value="Ficção">Ficção</option>
-                        <option value="Infantil">Infantil</option>
+                        {categorias.map((categoria) => (
+                            <option key={categoria.id} value={categoria.id}>
+                                {categoria.nome}
+                            </option>
+                        ))}
                     </select>
                     <p className="text-[#414651]">Quantidade de livros*</p>
                     <input

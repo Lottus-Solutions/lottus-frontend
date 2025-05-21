@@ -52,8 +52,20 @@ export function Alunos() {
             </div>
 
             {mostrarModal && (
-                <ModalAdicionarAluno onClose={() => setMostrarModal(false)} />
+                <ModalAdicionarAluno
+                    onClose={() => setMostrarModal(false)}
+                    atualizarLista={() => {
+                        axios.get(`/alunos/turma/${id}`)
+                            .then(response => {
+                                setAlunos(response.data);
+                            })
+                            .catch(error => {
+                                console.error("Erro ao buscar alunos:", error);
+                            });
+                    }}
+                />
             )}
+
         </div>
     );
 }

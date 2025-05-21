@@ -20,7 +20,7 @@ export function AlertSucesso({ onClose, titulo, descricao }) {
             className="bg-white p-6 rounded-2xl shadow-lg w-[400px] h-fit flex flex-col justify-between gap-3
                        fixed top-5 right-5 z-50"
         >
-            <img src="./images/sucess-icon.svg" alt="Sucesso" className="w-12" />
+            <img src="/images/sucess-icon.svg" alt="Sucesso" className="w-12" />
             <p className='font-semibold'>{titulo}</p>
             <p className='text-sm text-[#727272]'>{descricao}</p>
         </motion.div>

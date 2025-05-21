@@ -22,29 +22,26 @@ export function ModalEditarLivro(props) {
                     <p className="text-[#727272]">Atualize as informações para </p>
                 </div>
                 <form className="flex flex-col gap-4 w-[80%] mb-6">
-                    <p className="text-[#414651]">ISBN</p>
+                    
+                    <p className="text-[#414651]">Nome do livro</p>
                     <input
                         type="text"
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"
                     />
-                    <p className="text-[#414651]">Alterar nome do livro</p>
+                    <p className="text-[#414651]">Autor</p>
                     <input
                         type="text"
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"
                     />
-                    <p className="text-[#414651]">Alterar Autor</p>
-                    <input
-                        type="text"
-                        className="border border-gray-300 rounded px-2 py-[5px] text-sm"
-                    />
-                    <p className="text-[#414651]">Alterar Categoria</p>
+                    <p className="text-[#414651]">Categorias</p>
                     <select name="Categoria" className="border border-gray-300 rounded px-2 py-[5px] text-sm outline-0">
+                        <option value="">Selecione</option>
                         <option value="">Aventura</option>
                         <option value="">Terror</option>
                         <option value="">Ficção</option>
                         <option value="">Infantil</option>
                     </select>
-                    <p className="text-[#414651]">Alterar Quantidade</p>
+                    <p className="text-[#414651]">Quantidade de livros</p>
                     <input
                         type="text"
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"
