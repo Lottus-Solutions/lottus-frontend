@@ -1,8 +1,26 @@
 import { X } from "lucide-react";
 import { BotaoPrincipal } from "../botoes/BotaoPrincipal";
 import { motion } from 'framer-motion';
+import axios from "../../configs/axiosConfig";
+import { useState } from "react";
 
 export function ModalEditarLivro(props) {
+    const [categorias, setCategorias] = useState([]);
+
+    const buscarCategorias = () => {
+        axios.get("/categorias")
+            .then(response => {
+                setCategorias(response.data);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar categorias:", error);
+            });
+    };
+
+    useEffect(() => {
+        buscarCategorias();
+    }, []);
+
     return (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
             <motion.div
@@ -22,7 +40,7 @@ export function ModalEditarLivro(props) {
                     <p className="text-[#727272]">Atualize as informações para </p>
                 </div>
                 <form className="flex flex-col gap-4 w-[80%] mb-6">
-                    
+
                     <p className="text-[#414651]">Nome do livro</p>
                     <input
                         type="text"
@@ -36,10 +54,11 @@ export function ModalEditarLivro(props) {
                     <p className="text-[#414651]">Categorias</p>
                     <select name="Categoria" className="border border-gray-300 rounded px-2 py-[5px] text-sm outline-0">
                         <option value="">Selecione</option>
-                        <option value="">Aventura</option>
-                        <option value="">Terror</option>
-                        <option value="">Ficção</option>
-                        <option value="">Infantil</option>
+                        {categorias.map((categoria) => (
+                                <option key={categoria.id} value={categoria.id}>
+                                    {categoria.nome}
+                                </option>
+                            ))}
                     </select>
                     <p className="text-[#414651]">Quantidade de livros</p>
                     <input

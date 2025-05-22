@@ -16,14 +16,64 @@ export function Catalogo() {
     const [categorias, setCategorias] = useState([]);
     const [categoriaSelecionadaId, setCategoriaSelecionadaId] = useState("");
 
-    const buscarLivros = () => {
-        axios.get("/livros")
+    const [paginaAtual, setPaginaAtual] = useState(0);
+    const [totalPaginas, setTotalPaginas] = useState(1);
+    const tamanhoPagina = 10;
+
+    const buscarLivros = (pagina = 0) => {
+        axios.get("/livros", {
+            params: {
+                pagina,
+                tamanho: tamanhoPagina
+            }
+        })
+        .then(response => {
+            setLivros(response.data.content);
+            setPaginaAtual(response.data.number);
+            setTotalPaginas(response.data.totalPages);
+        })
+        .catch(error => {
+            console.error("Erro ao buscar livros:", error);
+        });
+    };
+
+    const buscarLivrosFiltrados = (pagina = 0) => {
+        axios.get(`/livros/buscar/${encodeURIComponent(busca)}`, {
+            params: {
+                pagina,
+                tamanho: tamanhoPagina
+            }
+        })
+        .then(response => {
+            setLivros(response.data.content);
+            setPaginaAtual(response.data.number);
+            setTotalPaginas(response.data.totalPages);
+        })
+        .catch(error => {
+            console.error("Erro ao buscar livros:", error);
+        });
+    };
+
+    const filtrarPorCategoria = (idCategoria, pagina = 0) => {
+        if (idCategoria === "") {
+            buscarLivros(pagina);
+        } else {
+            axios.get("/livros/filtrar-por-categoria", {
+                params: {
+                    categoriaIds: idCategoria,
+                    pagina,
+                    tamanho: tamanhoPagina
+                }
+            })
             .then(response => {
-                setLivros(response.data);
+                setLivros(response.data.content);
+                setPaginaAtual(response.data.number);
+                setTotalPaginas(response.data.totalPages);
             })
             .catch(error => {
-                console.error("Erro ao buscar livros:", error);
+                console.error("Erro ao filtrar livros:", error);
             });
+        }
     };
 
     const buscarCategorias = () => {
@@ -36,50 +86,19 @@ export function Catalogo() {
             });
     };
 
-    const buscarLivrosFiltrados = () => {
-        axios.get(`/livros/buscar/${encodeURIComponent(busca)}`)
-            .then(response => {
-                setLivros(response.data);
-            })
-            .catch(error => {
-                console.error("Erro ao buscar livros:", error);
-            });
-    };
-
-    const filtrarPorCategoria = (idCategoria) => {
-    if (idCategoria === "") {
-        buscarLivros(); // volta à lista completa
-    } else {
-        axios.get("/livros/filtrar-por-categoria", {
-            params: {
-                categoriaIds: idCategoria 
-            }
-        })
-        .then(response => {
-            setLivros(response.data);
-        })
-        .catch(error => {
-            console.error("Erro ao filtrar livros:", error);
-        });
-    }
-};
-
-
-    useEffect(() => {
-        if (busca.trim() !== "") {
-            buscarLivrosFiltrados();
-        } else {
-            buscarLivros();
-        }
-    }, [busca]);
-
     useEffect(() => {
         buscarCategorias();
     }, []);
 
     useEffect(() => {
-        filtrarPorCategoria(categoriaSelecionadaId);
-    }, [categoriaSelecionadaId]);
+        if (busca.trim() !== "") {
+            buscarLivrosFiltrados(paginaAtual);
+        } else if (categoriaSelecionadaId !== "") {
+            filtrarPorCategoria(categoriaSelecionadaId, paginaAtual);
+        } else {
+            buscarLivros(paginaAtual);
+        }
+    }, [busca, categoriaSelecionadaId, paginaAtual]);
 
     return (
         <div className="h-screen pt-16 pl-16 relative">
@@ -89,10 +108,13 @@ export function Catalogo() {
                 <Search
                     placeholder="Busque por livro, autor ou ID"
                     value={busca}
-                    onChange={(e) => setBusca(e.target.value)}
+                    onChange={(e) => {
+                        setPaginaAtual(0);
+                        setBusca(e.target.value);
+                    }}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                            buscarLivrosFiltrados();
+                            setPaginaAtual(0);
                         }
                     }}
                 />
@@ -102,7 +124,10 @@ export function Catalogo() {
                             name="Categoria"
                             className="w-fit border-[#727272] text-[#727272] border-[1px] rounded-full pl-3 pr-8 outline-0 text-xs h-9 appearance-none"
                             value={categoriaSelecionadaId}
-                            onChange={(e) => setCategoriaSelecionadaId(e.target.value)}
+                            onChange={(e) => {
+                                setPaginaAtual(0);
+                                setCategoriaSelecionadaId(e.target.value);
+                            }}
                         >
                             <option value="">Categorias</option>
                             {categorias.map((categoria) => (
@@ -135,7 +160,7 @@ export function Catalogo() {
             </div>
 
             <div className="mt-12 w-9/10 h-7/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-                {livros.map(livro => (
+                {Array.isArray(livros) && livros.map(livro => (
                     <CatalogoListItem
                         key={livro.id}
                         id={livro.id}
@@ -149,10 +174,29 @@ export function Catalogo() {
                 ))}
             </div>
 
+            {/* Paginação */}
+            <div className="mt-4 flex justify-center gap-4">
+                <button
+                    disabled={paginaAtual === 0}
+                    onClick={() => setPaginaAtual(paginaAtual - 1)}
+                    className="px-4 py-1 border rounded disabled:opacity-50"
+                >
+                    Anterior
+                </button>
+                <span>Página {paginaAtual + 1} de {totalPaginas}</span>
+                <button
+                    disabled={paginaAtual + 1 >= totalPaginas}
+                    onClick={() => setPaginaAtual(paginaAtual + 1)}
+                    className="px-4 py-1 border rounded disabled:opacity-50"
+                >
+                    Próxima
+                </button>
+            </div>
+
             {adicionarLivro && (
                 <ModalAdicionarLivro
                     onClose={() => setAdicionarLivro(false)}
-                    atualizarLista={buscarLivros}
+                    atualizarLista={() => buscarLivros(paginaAtual)}
                 />
             )}
             {modalCategorias && (
