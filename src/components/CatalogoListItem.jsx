@@ -55,6 +55,7 @@ export function CatalogoListItem(props) {
             {modalDetalhes && (
                 <ModalDetalhesLivro 
                 onClose={() => setModalDetalhes(false)}
+                id={props.id}
                 livro={props.livro}
                 autor={props.autor}
                 categoria={props.categoria}
