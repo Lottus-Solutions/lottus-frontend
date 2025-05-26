@@ -167,6 +167,7 @@ export function Catalogo() {
                         livro={livro.nome}
                         autor={livro.autor}
                         categoria={livro.categoria}
+                        descricao={livro.descricao}
                         qtdEmprestimos={livro.qtdEmprestimos || 0}
                         qtdLivros={livro.quantidade}
                         status={livro.status?.toLowerCase() || "disponível"}

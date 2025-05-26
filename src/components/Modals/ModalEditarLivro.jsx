@@ -46,7 +46,7 @@ export function ModalEditarLivro(props) {
 
         try {
             await axios.put(`/livros/${props.id}`, {
-                livro,
+                nome: livro,
                 autor,
                 quantidade: quantidadeNum,
                 categoriaId: categoriaIdNum,
