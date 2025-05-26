@@ -186,6 +186,7 @@ export function Catalogo() {
                                     id={livro.id}
                                     livro={livro.nome}
                                     autor={livro.autor}
+                                    descricao={livro.descricao}
                                     categoria={livro.categoria}
                                     qtdEmprestimos={livro.qtdEmprestimos || 0}
                                     qtdLivros={livro.quantidade}

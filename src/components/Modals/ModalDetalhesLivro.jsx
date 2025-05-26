@@ -2,29 +2,54 @@ import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { UltimosLeitoresListItem } from '../UltimosLeitoresListItem';
 import { ConfirmExcluirLivro } from './ConfirmExcluirLivro';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ModalEditarLivro } from './ModalEditarLivro';
+import axios from "../../configs/axiosConfig";
 
 export function ModalDetalhesLivro(props) {
     const [confirmExcluir, setConfirmExcluir] = useState(false);
     const [ModalEditarLivroOpen, setModalEditarOpen] = useState(false);
+    const [leitores, setLeitores] = useState([]);
 
-    // Estado local dos dados do livro
-    const [livroData, setLivroData] = useState({
-        id: props.id,
+    useEffect(() => {
+        async function carregarLeitores() {
+            try {
+                const response = await axios.get(`/emprestimos/historico/livro/${props.id}`);
+                console.log("Leitores:", response.data);
+                setLeitores(response.data);
+            } catch (error) {
+                console.error("Erro ao buscar histórico de leitores:", error);
+            }
+        }
+
+        carregarLeitores();
+    }, [props.id]);
+
+    // Estado local para os dados do livro
+    const [detalhesLivro, setDetalhesLivro] = useState({
         livro: props.livro,
         autor: props.autor,
+        descricao: props.descricao,
         quantidade: props.quantidade,
+        reservados: props.reservados,
         categoria: props.categoria,
         categoriaId: props.categoriaId,
-        descricao: props.descricao
+        id: props.id
     });
 
-    // Atualiza os dados quando o livro for editado
-    const handleAtualizacaoLivro = (novoLivro) => {
-        setLivroData(novoLivro);
-        setModalEditarOpen(false); // Fecha o modal de edição
-    };
+    // Atualiza os dados locais caso o props mude (abrir outro livro, por exemplo)
+    useEffect(() => {
+        setDetalhesLivro({
+            livro: props.livro,
+            autor: props.autor,
+            descricao: props.descricao,
+            quantidade: props.quantidade,
+            reservados: props.reservados,
+            categoria: props.categoria,
+            categoriaId: props.categoriaId,
+            id: props.id
+        });
+    }, [props]);
 
     return (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -43,28 +68,28 @@ export function ModalDetalhesLivro(props) {
 
                 <div className="flex flex-col gap-6 w-1/3 max-h-full">
                     <div className="flex flex-col gap-2">
-                        <h2 className="text-[#0292B7] text-xl font-semibold">{props.livro}</h2>
-                        <p className="text-base">{props.autor}</p>
+                        <h2 className="text-[#0292B7] text-xl font-semibold">{detalhesLivro.livro}</h2>
+                        <p className="text-base">{detalhesLivro.autor}</p>
                     </div>
 
                     <div className="bg-[#0292B7] w-fit px-7 py-1 rounded-full flex items-center justify-center">
-                        <p className="text-sm text-white">{props.categoria}</p>
+                        <p className="text-sm text-white">{detalhesLivro.categoria}</p>
                     </div>
 
                     <div className="flex flex-col gap-2">
                         <div className="text-sm flex items-center gap-1">
                             <span>Quantidade:</span>
-                            <span className="text-[#727272]">{props.quantidade}</span>
+                            <span className="text-[#727272]">{detalhesLivro.quantidade}</span>
                         </div>
                         <div className="text-sm flex items-center gap-1">
                             <span>Reservados:</span>
-                            <span className="text-[#727272]">{props.reservados}</span>
+                            <span className="text-[#727272]">{detalhesLivro.reservados}</span>
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-2 w-[80%]">
                         <p className="text-sm">Descrição:</p>
-                        <p className="text-sm text-[#727272]">{props.descricao}</p>
+                        <p className="text-sm text-[#727272]">{detalhesLivro.descricao}</p>
                     </div>
 
                     <div className="absolute bottom-10 flex gap-4">
@@ -86,8 +111,15 @@ export function ModalDetalhesLivro(props) {
                 <div className="w-2/3">
                     <p>Últimos leitores</p>
                     <div className="w-[95%] mt-6 h-9/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-                        <UltimosLeitoresListItem />
-                        {/* outros leitores... */}
+                        {leitores.length === 0 ? (
+                            <p className="text-sm text-[#727272]">Nenhum leitor encontrado.</p>
+                        ) : (
+                            leitores
+                                .filter(leitor => leitor?.aluno && leitor?.aluno?.turma)
+                                .map((leitor, index) => (
+                                    <UltimosLeitoresListItem key={index} leitor={leitor} />
+                                ))
+                        )}
                     </div>
                 </div>
             </motion.div>
@@ -98,14 +130,17 @@ export function ModalDetalhesLivro(props) {
 
             {ModalEditarLivroOpen && (
                 <ModalEditarLivro
+                    id={detalhesLivro.id}
+                    livro={detalhesLivro.livro}
+                    autor={detalhesLivro.autor}
+                    descricao={detalhesLivro.descricao}
+                    quantidade={detalhesLivro.quantidade}
+                    categoria={detalhesLivro.categoria}
+                    categoriaId={detalhesLivro.categoriaId}
                     onClose={() => setModalEditarOpen(false)}
-                    onAtualizar={handleAtualizacaoLivro}
-                    id={props.id}
-                    livro={props.livro}
-                    autor={props.autor}
-                    quantidade={props.quantidade}
-                    categoriaId={props.categoriaId}
-                    descricao={props.descricao}
+                    onAtualizar={(dadosAtualizados) => {
+                        setDetalhesLivro(dadosAtualizados);
+                    }}
                 />
             )}
         </div>
