@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { X } from "lucide-react";
 import { BotaoPrincipal } from "../botoes/BotaoPrincipal";
 import { motion } from 'framer-motion';
@@ -6,7 +6,7 @@ import axios from "../../configs/axiosConfig";
 import { AlertSucesso } from "../Alerts/AlertSucesso";
 
 export function ModalAdicionarLivro(props) {
-    const [isbn, setIsbn] = useState(""); // ignorado no envio
+    const [isbn, setIsbn] = useState("");
     const [nome, setNome] = useState("");
     const [autor, setAutor] = useState("");
     const [descricao, setDescricao] = useState("");
@@ -15,16 +15,49 @@ export function ModalAdicionarLivro(props) {
     const [quantidade, setQuantidade] = useState("");
     const [alert, setAlert] = useState(false);
 
+    const debounceRef = useRef(null);
+
     useEffect(() => {
         axios.get("/categorias")
-            .then(response => {
-                setCategorias(response.data);
-            })
-            .catch(error => {
-                console.error("Erro ao buscar categorias:", error);
-            });
+            .then(response => setCategorias(response.data))
+            .catch(error => console.error("Erro ao buscar categorias:", error));
     }, []);
 
+    // Função para buscar dados no Google Books
+    const buscarLivroPorIsbn = async (isbn) => {
+        if (!isbn) return;
+        try {
+            const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
+            const data = await response.json();
+            if (data.totalItems > 0) {
+                const livro = data.items[0].volumeInfo;
+                setNome(livro.title || "");
+                setAutor(livro.authors ? livro.authors.join(", ") : "");
+            }
+        } catch (error) {
+            console.error("Erro ao buscar livro no Google Books:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (isbn.length === 10 || isbn.length === 13) {
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+
+            debounceRef.current = setTimeout(() => {
+                buscarLivroPorIsbn(isbn);
+            }, 500);
+        }
+
+        return () => {
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+        };
+    }, [isbn]);
+
+    // Salvar livro no banco
     const handleSalvar = (e) => {
         e.preventDefault();
 
@@ -39,17 +72,13 @@ export function ModalAdicionarLivro(props) {
         axios.post("/livros", novoLivro)
             .then(() => {
                 setAlert(true);
-
                 setTimeout(() => {
                     setAlert(false);
                     props.onClose();
                     if (props.atualizarLista) props.atualizarLista();
                 }, 1000);
             })
-            .catch(error => {
-                console.error("Erro ao adicionar livro:", error);
-
-            });
+            .catch(error => console.error("Erro ao adicionar livro:", error));
     };
 
     return (
@@ -87,7 +116,7 @@ export function ModalAdicionarLivro(props) {
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"
                         value={isbn}
                         onChange={(e) => setIsbn(e.target.value)}
-                        disabled // desabilitado por enquanto
+                        placeholder="Digite o ISBN"
                     />
                     <p className="text-[#414651]">Nome do livro*</p>
                     <input
