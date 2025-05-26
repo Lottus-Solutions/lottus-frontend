@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChartColumnStacked, Filter } from "lucide-react";
+import { ChartColumnStacked, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 import { BotaoPrincipal } from "../../components/botoes/BotaoPrincipal";
 import { CatalogoListItem } from "../../components/CatalogoListItem";
 import { Perfil } from "../../components/Perfil";
@@ -7,6 +7,7 @@ import { Search } from "../../components/Search";
 import { ModalAdicionarLivro } from "../../components/Modals/ModalAdicionarLivro";
 import { ModalCategorias } from "../../components/Modals/ModalCategorias";
 import axios from "../../configs/axiosConfig";
+import { CatalogoListItemSkeleton } from "../../components/Skelletons/CatalogoListItemSkeleton";
 
 export function Catalogo() {
     const [adicionarLivro, setAdicionarLivro] = useState(false);
@@ -18,43 +19,50 @@ export function Catalogo() {
 
     const [paginaAtual, setPaginaAtual] = useState(0);
     const [totalPaginas, setTotalPaginas] = useState(1);
-    const tamanhoPagina = 10;
+    const [carregando, setCarregando] = useState(false);
+
+    const tamanhoPagina = 50;
 
     const buscarLivros = (pagina = 0) => {
+        setCarregando(true);
         axios.get("/livros", {
             params: {
                 pagina,
                 tamanho: tamanhoPagina
             }
         })
-        .then(response => {
-            setLivros(response.data.content);
-            setPaginaAtual(response.data.number);
-            setTotalPaginas(response.data.totalPages);
-        })
-        .catch(error => {
-            console.error("Erro ao buscar livros:", error);
-        });
+            .then(response => {
+                setLivros(response.data.content);
+                setPaginaAtual(response.data.number);
+                setTotalPaginas(response.data.totalPages);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar livros:", error);
+            })
+            .finally(() => setCarregando(false));
     };
 
     const buscarLivrosFiltrados = (pagina = 0) => {
+        setCarregando(true);
         axios.get(`/livros/buscar/${encodeURIComponent(busca)}`, {
             params: {
                 pagina,
                 tamanho: tamanhoPagina
             }
         })
-        .then(response => {
-            setLivros(response.data.content);
-            setPaginaAtual(response.data.number);
-            setTotalPaginas(response.data.totalPages);
-        })
-        .catch(error => {
-            console.error("Erro ao buscar livros:", error);
-        });
+            .then(response => {
+                setLivros(response.data.content);
+                setPaginaAtual(response.data.number);
+                setTotalPaginas(response.data.totalPages);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar livros:", error);
+            })
+            .finally(() => setCarregando(false));
     };
 
     const filtrarPorCategoria = (idCategoria, pagina = 0) => {
+        setCarregando(true);
         if (idCategoria === "") {
             buscarLivros(pagina);
         } else {
@@ -65,14 +73,15 @@ export function Catalogo() {
                     tamanho: tamanhoPagina
                 }
             })
-            .then(response => {
-                setLivros(response.data.content);
-                setPaginaAtual(response.data.number);
-                setTotalPaginas(response.data.totalPages);
-            })
-            .catch(error => {
-                console.error("Erro ao filtrar livros:", error);
-            });
+                .then(response => {
+                    setLivros(response.data.content);
+                    setPaginaAtual(response.data.number);
+                    setTotalPaginas(response.data.totalPages);
+                })
+                .catch(error => {
+                    console.error("Erro ao filtrar livros:", error);
+                })
+                .finally(() => setCarregando(false));
         }
     };
 
@@ -104,6 +113,7 @@ export function Catalogo() {
         <div className="h-screen pt-16 pl-16 relative">
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Catálogo</h2>
+
             <div className="flex justify-between w-9/10">
                 <Search
                     placeholder="Busque por livro, autor ou ID"
@@ -160,37 +170,58 @@ export function Catalogo() {
             </div>
 
             <div className="mt-12 w-9/10 h-7/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-                {Array.isArray(livros) && livros.map(livro => (
-                    <CatalogoListItem
-                        key={livro.id}
-                        id={livro.id}
-                        livro={livro.nome}
-                        autor={livro.autor}
-                        categoria={livro.categoria}
-                        qtdEmprestimos={livro.qtdEmprestimos || 0}
-                        qtdLivros={livro.quantidade}
-                        status={livro.status?.toLowerCase() || "disponível"}
-                    />
-                ))}
-            </div>
 
-            {/* Paginação */}
-            <div className="mt-4 flex justify-center gap-4">
-                <button
-                    disabled={paginaAtual === 0}
-                    onClick={() => setPaginaAtual(paginaAtual - 1)}
-                    className="px-4 py-1 border rounded disabled:opacity-50"
-                >
-                    Anterior
-                </button>
-                <span>Página {paginaAtual + 1} de {totalPaginas}</span>
-                <button
-                    disabled={paginaAtual + 1 >= totalPaginas}
-                    onClick={() => setPaginaAtual(paginaAtual + 1)}
-                    className="px-4 py-1 border rounded disabled:opacity-50"
-                >
-                    Próxima
-                </button>
+                {carregando ? (
+                    <>
+                        {[...Array(5)].map((_, index) => (
+                            <CatalogoListItemSkeleton key={index} />
+                        ))}
+                    </>
+                ) : (
+                    <>
+                        {Array.isArray(livros) && livros.length > 0 ? (
+                            livros.map(livro => (
+                                <CatalogoListItem
+                                    key={livro.id}
+                                    id={livro.id}
+                                    livro={livro.nome}
+                                    autor={livro.autor}
+                                    categoria={livro.categoria}
+                                    qtdEmprestimos={livro.qtdEmprestimos || 0}
+                                    qtdLivros={livro.quantidade}
+                                    status={livro.status?.toLowerCase() || "disponível"}
+                                />
+                            ))
+                        ) : (
+                            <div className="text-center text-sm text-gray-500">Nenhum livro encontrado.</div>
+                        )}
+                    </>
+                )}
+
+                {!carregando && livros.length > 0 && (
+                    <div className="flex justify-end items-center gap-6">
+                        <button
+                            disabled={paginaAtual === 0}
+                            onClick={() => setPaginaAtual(paginaAtual - 1)}
+                            className="p-2 text-[#0292B7] disabled:cursor-not-allowed transition"
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+
+                        <span className="text-sm text-gray-700">
+                            <span>{paginaAtual + 1}</span> /{" "}
+                            <span>{totalPaginas}</span>
+                        </span>
+
+                        <button
+                            disabled={paginaAtual + 1 >= totalPaginas}
+                            onClick={() => setPaginaAtual(paginaAtual + 1)}
+                            className="p-2 text-[#0292B7] disabled:cursor-not-allowed transition"
+                        >
+                            <ChevronRight size={20} />
+                        </button>
+                    </div>
+                )}
             </div>
 
             {adicionarLivro && (
