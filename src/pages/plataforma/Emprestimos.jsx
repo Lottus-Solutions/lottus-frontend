@@ -4,6 +4,7 @@ import { Perfil } from "../../components/Perfil";
 import { Search } from "../../components/Search";
 import '../../index.css';
 import axios from "../../configs/axiosConfig";
+import { CircleAlert, Inbox } from "lucide-react";
 
 export function Emprestimos() {
     const [emprestimos, setEmprestimos] = useState([]);
@@ -23,7 +24,7 @@ export function Emprestimos() {
         if (mostrarAtrasados) {
             endpoint = "/emprestimos/atrasados"
         }
-            
+
         axios.get(endpoint)
             .then(response => {
                 setEmprestimos(response.data);
@@ -44,12 +45,12 @@ export function Emprestimos() {
     }
 
     function handleToggleAtrasados() {
-    if (mostrarAtrasados) {
-        setMostrarAtrasados(false);
-    } else {
-        setMostrarAtrasados(true);
+        if (mostrarAtrasados) {
+            setMostrarAtrasados(false);
+        } else {
+            setMostrarAtrasados(true);
+        }
     }
-}
 
     return (
         <div className="h-screen pt-16 pl-16">
@@ -72,18 +73,29 @@ export function Emprestimos() {
                 </div>
             </div>
             <div className="mt-12 w-9/10 h-7/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-                {emprestimos.map((emprestimo, index) => (
-                    <EmprestimoListItem
-                        key={index}
-                        id={emprestimo.id}
-                        aluno={emprestimo.aluno?.nome || 'Nome do Aluno'}
-                        livro={emprestimo.livro?.nome || 'Nome do Livro'}
-                        dataDevolucao={emprestimo.dataDevolucaoPrevista}
-                        diasAtraso={emprestimo.diasAtrasados}
-                        atualizarLista={getEmprestimos}
-                    />
-                ))}
+                {emprestimos.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full gap-3 mb-20">
+                        <Inbox className="w-8 h-8 text-[#0292B7] " />
+                        <div className="flex flex-col items-center gap-1">
+                            <p className="text-base">Nenhum empréstimo ativo!</p>
+                            <p className="text-[#727272]">Nenhum empréstimo em andamento foi localizado. </p>
+                        </div>
+                    </div>
+                ) : (
+                    emprestimos.map((emprestimo, index) => (
+                        <EmprestimoListItem
+                            key={index}
+                            id={emprestimo.id}
+                            aluno={emprestimo.aluno?.nome || 'Nome do Aluno'}
+                            livro={emprestimo.livro?.nome || 'Nome do Livro'}
+                            dataDevolucao={emprestimo.dataDevolucaoPrevista}
+                            diasAtraso={emprestimo.diasAtrasados}
+                            atualizarLista={getEmprestimos}
+                        />
+                    ))
+                )}
             </div>
+
         </div>
     );
 }
