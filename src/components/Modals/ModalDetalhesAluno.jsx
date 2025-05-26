@@ -1,18 +1,35 @@
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
-import { UltimosLeitoresListItem } from '../UltimosLeitoresListItem';
-import { ConfirmExcluirLivro } from './ConfirmExcluirLivro';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { CardLivroAtual } from '../SiteComponents/CardLivroAtual';
 import { HistoricoLeituraListItem } from '../HistoricoLeituraListItem';
+import { ConfirmExcluirLivro } from './ConfirmExcluirLivro';
 
-export function ModalDetalhesAluno(props) {
+export function ModalDetalhesAluno({ onClose, aluno, nomeTurma }) {
     const [confirmExcluir, setConfirmExcluir] = useState(false);
+    const [historico, setHistorico] = useState([]);
+
+    useEffect(() => {
+        async function fetchHistorico() {
+            if (!aluno?.matricula) return;
+            try {
+                const response = await axios.get(`/emprestimos/historico/aluno/${aluno.matricula}`);
+                console.log("Histórico recebido:", response.data);
+                setHistorico(response.data);
+            } catch (error) {
+                console.error("Erro ao buscar histórico de leitura:", error);
+            }
+        }
+
+        fetchHistorico();
+    }, [aluno]);
+
+    if (!aluno) return null;
 
     const maximoObrigatorio = 4;
-
     const totalLimitado = Math.min(4, maximoObrigatorio);
-    const lidosLimitado = Math.min(2, maximoObrigatorio);
+    const lidosLimitado = Math.min(aluno.qtdLivrosLidos || 0, maximoObrigatorio);
 
     return (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -22,21 +39,18 @@ export function ModalDetalhesAluno(props) {
                 transition={{ duration: 0.2 }}
                 className="bg-white p-10 rounded-2xl w-[80%] h-[80%] shadow-lg pt-16 relative flex"
             >
-                <button
-                    className="absolute top-8 right-8 cursor-pointer"
-                    onClick={props.onClose}
-                >
+                <button className="absolute top-8 right-8 cursor-pointer" onClick={onClose}>
                     <X className="text-gray-400" />
                 </button>
 
+                {/* LADO ESQUERDO */}
                 <div className="flex flex-col gap-6 w-1/3 max-h-full">
                     <div className="flex flex-col gap-2">
                         <div className='flex items-center gap-4'>
-                            <h2 className="text-[#0292B7] text-2xl font-semibold">Matheus Blasco</h2>
-                            <span className='text-sm text-black mt-2'>0.00</span>
+                            <h2 className="text-[#0292B7] text-2xl font-semibold">{aluno.nome}</h2>
+                            <span className='text-sm text-black mt-2'>{aluno.qtdBonus?.toFixed(2) || "0.00"}</span>
                         </div>
-
-                        <p className="text-base">CEAD - 1° Ano A</p>
+                        <p className="text-base">{nomeTurma}</p>
                     </div>
 
                     <div className='flex gap-4 items-center'>
@@ -63,7 +77,7 @@ export function ModalDetalhesAluno(props) {
                             src="/images/edit-circle.svg"
                             alt="Editar"
                             className="cursor-pointer"
-                            onClick={() => setModalEditarOpen(true)}
+                            onClick={() => console.log("Editar aluno")}
                         />
                         <img
                             src="/images/delete-circle.svg"
@@ -74,10 +88,17 @@ export function ModalDetalhesAluno(props) {
                     </div>
                 </div>
 
+                {/* LADO DIREITO - HISTÓRICO */}
                 <div className="w-2/3">
                     <p>Histórico de Leitura</p>
                     <div className="w-[95%] mt-6 h-9/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-                        <HistoricoLeituraListItem />
+                        {historico.length === 0 ? (
+                            <p className="text-sm text-gray-500">Nenhum histórico encontrado.</p>
+                        ) : (
+                            historico.map((item) => (
+                                <HistoricoLeituraListItem key={item.id} item={item} />
+                            ))
+                        )}
                     </div>
                 </div>
             </motion.div>
