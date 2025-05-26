@@ -1,55 +1,69 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { EmprestimoListItem } from "../../components/EmprestimoListItem";
 import { Perfil } from "../../components/Perfil";
 import { Search } from "../../components/Search";
+import { ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 import '../../index.css';
 import axios from "../../configs/axiosConfig";
-import { CircleAlert, Inbox } from "lucide-react";
 
 export function Emprestimos() {
     const [emprestimos, setEmprestimos] = useState([]);
     const [mostrarAtrasados, setMostrarAtrasados] = useState(false);
     const [busca, setBusca] = useState("");
+    const [paginaAtual, setPaginaAtual] = useState(0);
+    const [totalPaginas, setTotalPaginas] = useState(1);
+    const [carregando, setCarregando] = useState(false);
+    const debounceRef = useRef(null);
+
+    const tamanhoPagina = 50;
 
     useEffect(() => {
         if (busca.trim() !== "") {
-            buscarEmprestimos();
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+
+            debounceRef.current = setTimeout(() => {
+                buscarEmprestimos(0); // Reseta para a primeira página na busca
+            }, 500);
+
+            return () => {
+                if (debounceRef.current) {
+                    clearTimeout(debounceRef.current);
+                }
+            };
         } else {
-            getEmprestimos();
+            buscarEmprestimos(paginaAtual);
         }
-    }, [mostrarAtrasados, busca]);
+    }, [busca, mostrarAtrasados, paginaAtual]);
 
-    function getEmprestimos() {
-        let endpoint = '/emprestimos'
+    function buscarEmprestimos(pagina = 0) {
+        setCarregando(true);
+        const params = new URLSearchParams();
+        if (busca.trim() !== "") {
+            params.append("busca", busca);
+        }
         if (mostrarAtrasados) {
-            endpoint = "/emprestimos/atrasados"
+            params.append("atrasados", "true");
         }
+        params.append("pagina", pagina);
+        params.append("tamanho", tamanhoPagina);
 
-        axios.get(endpoint)
+        axios.get(`/emprestimos?${params.toString()}`)
             .then(response => {
-                setEmprestimos(response.data);
+                setEmprestimos(response.data.content || response.data);
+                setPaginaAtual(response.data.number || pagina);
+                setTotalPaginas(response.data.totalPages || 1);
             })
             .catch(error => {
                 console.error("Erro ao buscar empréstimos:", error);
-            });
-    }
-
-    function buscarEmprestimos() {
-        axios.get(`/emprestimos/buscar?valor=${encodeURIComponent(busca)}`)
-            .then(response => {
-                setEmprestimos(response.data);
             })
-            .catch(error => {
-                console.error("Erro ao buscar empréstimos:", error);
-            });
+            .finally(() => setCarregando(false));
     }
 
     function handleToggleAtrasados() {
-        if (mostrarAtrasados) {
-            setMostrarAtrasados(false);
-        } else {
-            setMostrarAtrasados(true);
-        }
+        setMostrarAtrasados(!mostrarAtrasados);
+        setPaginaAtual(0); // Reseta para a primeira página
     }
 
     return (
@@ -60,7 +74,17 @@ export function Emprestimos() {
                 <Search
                     placeholder="Busque por aluno ou livro"
                     value={busca}
-                    onChange={(e) => setBusca(e.target.value)}
+                    onChange={(e) => {
+                        setBusca(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            if (debounceRef.current) {
+                                clearTimeout(debounceRef.current);
+                            }
+                            buscarEmprestimos(0); // Busca imediata ao pressionar Enter
+                        }
+                    }}
                 />
                 <div className="flex items-center justify-center gap-5 mr-8 w-36 px-4 h-9 border-[#727272] border-[1px] rounded-full">
                     <p className="text-[#727272] text-xs">Em atraso</p>
@@ -68,17 +92,22 @@ export function Emprestimos() {
                         type="checkbox"
                         checked={mostrarAtrasados}
                         onChange={handleToggleAtrasados}
-                        disabled={busca.trim() !== ""} // Desabilita o filtro quando estiver buscando
+                        disabled={busca.trim() !== ""}
                     />
                 </div>
             </div>
             <div className="mt-12 w-9/10 h-7/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-                {emprestimos.length === 0 ? (
+                {carregando ? (
                     <div className="flex flex-col items-center justify-center h-full gap-3 mb-20">
-                        <Inbox className="w-8 h-8 text-[#0292B7] " />
+                        <Inbox className="w-8 h-8 text-[#0292B7]" />
+                        <p className="text-base">Carregando...</p>
+                    </div>
+                ) : emprestimos.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full gap-3 mb-20">
+                        <Inbox className="w-8 h-8 text-[#0292B7]" />
                         <div className="flex flex-col items-center gap-1">
                             <p className="text-base">Nenhum empréstimo ativo!</p>
-                            <p className="text-[#727272]">Nenhum empréstimo em andamento foi localizado. </p>
+                            <p className="text-[#727272]">Nenhum empréstimo em andamento foi localizado.</p>
                         </div>
                     </div>
                 ) : (
@@ -90,12 +119,32 @@ export function Emprestimos() {
                             livro={emprestimo.livro?.nome || 'Nome do Livro'}
                             dataDevolucao={emprestimo.dataDevolucaoPrevista}
                             diasAtraso={emprestimo.diasAtrasados}
-                            atualizarLista={getEmprestimos}
+                            atualizarLista={() => buscarEmprestimos(paginaAtual)}
                         />
                     ))
                 )}
             </div>
-
+            {!carregando && emprestimos.length > 0 && (
+                <div className="flex justify-end items-center gap-6 mt-4">
+                    <button
+                        disabled={paginaAtual === 0}
+                        onClick={() => setPaginaAtual(paginaAtual - 1)}
+                        className="p-2 text-[#0292B7] disabled:cursor-not-allowed transition"
+                    >
+                        <ChevronLeft size={20} />
+                    </button>
+                    <span className="text-sm text-gray-700">
+                        <span>{paginaAtual + 1}</span> / <span>{totalPaginas}</span>
+                    </span>
+                    <button
+                        disabled={paginaAtual + 1 >= totalPaginas}
+                        onClick={() => setPaginaAtual(paginaAtual + 1)}
+                        className="p-2 text-[#0292B7] disabled:cursor-not-allowed transition"
+                    >
+                        <ChevronRight size={20} />
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
