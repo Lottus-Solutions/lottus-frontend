@@ -9,7 +9,7 @@ export function ModalAdicionarEmprestimo(props) {
     useEffect(() => {
         const hoje = new Date();
         hoje.setDate(hoje.getDate() + 15);
-        const dataFormatada = hoje.toISOString().split('T')[0]; 
+        const dataFormatada = hoje.toISOString().split('T')[0];
         setDataDevolucao(dataFormatada);
     }, []);
 
@@ -33,12 +33,9 @@ export function ModalAdicionarEmprestimo(props) {
                     <p className="text-[#727272]">Insira as informações para realizar um novo empréstimo</p>
                 </div>
                 <form className="flex flex-col gap-4 w-[80%] mb-6">
-                    <p className="text-[#414651]">Nome do aluno</p>
-                    <input
-                        type="text"
-                        className="border border-gray-300 rounded px-2 py-[5px] text-sm"
-                    />
                     <p className="text-[#414651]">Livro</p>
+                    <p>{props.livro}</p>
+                    <p className="text-[#414651]">Nome do aluno</p>
                     <input
                         type="text"
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm"

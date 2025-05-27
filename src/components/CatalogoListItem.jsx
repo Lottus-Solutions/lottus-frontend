@@ -53,20 +53,20 @@ export function CatalogoListItem(props) {
             </div>
 
             {modalDetalhes && (
-                <ModalDetalhesLivro 
-                onClose={() => setModalDetalhes(false)}
-                id={props.id}
-                livro={props.livro}
-                autor={props.autor}
-                categoria={props.categoria}
-                quantidade={props.qtdLivros}
-                reservados={props.qtdEmprestimos}
-                descricao={props.descricao}
+                <ModalDetalhesLivro
+                    onClose={() => setModalDetalhes(false)}
+                    id={props.id}
+                    livro={props.livro}
+                    autor={props.autor}
+                    categoria={props.categoria}
+                    quantidade={props.qtdLivros}
+                    reservados={props.qtdEmprestimos}
+                    descricao={props.descricao}
                 />
             )}
 
             {modalEmprestimo && (
-                <ModalAdicionarEmprestimo onClose={() => setModalEmprestimo(false)} />
+                <ModalAdicionarEmprestimo onClose={() => setModalEmprestimo(false)} livro={props.livro} />
             )}
         </div>
 

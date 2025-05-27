@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChartColumnStacked, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 import { BotaoPrincipal } from "../../components/botoes/BotaoPrincipal";
 import { CatalogoListItem } from "../../components/CatalogoListItem";
@@ -16,73 +16,45 @@ export function Catalogo() {
     const [busca, setBusca] = useState("");
     const [categorias, setCategorias] = useState([]);
     const [categoriaSelecionadaId, setCategoriaSelecionadaId] = useState("");
+    const [statusSelecionado, setStatusSelecionado] = useState(""); // Estado para status
 
     const [paginaAtual, setPaginaAtual] = useState(0);
     const [totalPaginas, setTotalPaginas] = useState(1);
     const [carregando, setCarregando] = useState(false);
 
+    const debounceRef = useRef(null);
     const tamanhoPagina = 50;
 
     const buscarLivros = (pagina = 0) => {
         setCarregando(true);
-        axios.get("/livros", {
-            params: {
-                pagina,
-                tamanho: tamanhoPagina
-            }
-        })
-            .then(response => {
-                setLivros(response.data.content);
-                setPaginaAtual(response.data.number);
-                setTotalPaginas(response.data.totalPages);
-            })
-            .catch(error => {
-                console.error("Erro ao buscar livros:", error);
-            })
-            .finally(() => setCarregando(false));
-    };
 
-    const buscarLivrosFiltrados = (pagina = 0) => {
-        setCarregando(true);
-        axios.get(`/livros/buscar/${encodeURIComponent(busca)}`, {
-            params: {
-                pagina,
-                tamanho: tamanhoPagina
-            }
-        })
-            .then(response => {
-                setLivros(response.data.content);
-                setPaginaAtual(response.data.number);
-                setTotalPaginas(response.data.totalPages);
-            })
-            .catch(error => {
-                console.error("Erro ao buscar livros:", error);
-            })
-            .finally(() => setCarregando(false));
-    };
+        const params = {
+            pagina,
+            tamanho: tamanhoPagina
+        };
 
-    const filtrarPorCategoria = (idCategoria, pagina = 0) => {
-        setCarregando(true);
-        if (idCategoria === "") {
-            buscarLivros(pagina);
-        } else {
-            axios.get("/livros/filtrar-por-categoria", {
-                params: {
-                    categoriaIds: idCategoria,
-                    pagina,
-                    tamanho: tamanhoPagina
-                }
-            })
-                .then(response => {
-                    setLivros(response.data.content);
-                    setPaginaAtual(response.data.number);
-                    setTotalPaginas(response.data.totalPages);
-                })
-                .catch(error => {
-                    console.error("Erro ao filtrar livros:", error);
-                })
-                .finally(() => setCarregando(false));
+        let endpoint = "/livros/buscar";
+
+        if (statusSelecionado) {
+            endpoint = "/livros/filtrar-por-status";
+            params.statusvalue = statusSelecionado;
+
+            console.log("Buscando livros com status:", statusSelecionado);
+        } else if (busca.trim() !== "") {
+            params.valor = busca;
         }
+
+
+        axios.get(endpoint, { params })
+            .then(response => {
+                setLivros(response.data.content);
+                setPaginaAtual(response.data.number);
+                setTotalPaginas(response.data.totalPages);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar livros:", error);
+            })
+            .finally(() => setCarregando(false));
     };
 
     const buscarCategorias = () => {
@@ -101,13 +73,23 @@ export function Catalogo() {
 
     useEffect(() => {
         if (busca.trim() !== "") {
-            buscarLivrosFiltrados(paginaAtual);
-        } else if (categoriaSelecionadaId !== "") {
-            filtrarPorCategoria(categoriaSelecionadaId, paginaAtual);
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+
+            debounceRef.current = setTimeout(() => {
+                buscarLivros(0);
+            }, 500);
+
+            return () => {
+                if (debounceRef.current) {
+                    clearTimeout(debounceRef.current);
+                }
+            };
         } else {
             buscarLivros(paginaAtual);
         }
-    }, [busca, categoriaSelecionadaId, paginaAtual]);
+    }, [busca, categoriaSelecionadaId, statusSelecionado, paginaAtual]);
 
     return (
         <div className="h-screen pt-16 pl-16 relative">
@@ -121,11 +103,6 @@ export function Catalogo() {
                     onChange={(e) => {
                         setPaginaAtual(0);
                         setBusca(e.target.value);
-                    }}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            setPaginaAtual(0);
-                        }
                     }}
                 />
                 <div className="flex gap-4">
@@ -149,10 +126,18 @@ export function Catalogo() {
                         <Filter className="absolute top-1/2 right-3 -translate-y-1/2 text-[#727272]" size={14} />
                     </div>
                     <div className="relative inline-block">
-                        <select name="Status" className="w-28 border-[#727272] text-[#727272] border-[1px] rounded-full px-4 pr-8 outline-0 text-xs h-9 appearance-none">
+                        <select
+                            name="Status"
+                            className="w-28 border-[#727272] text-[#727272] border-[1px] rounded-full px-4 pr-8 outline-0 text-xs h-9 appearance-none"
+                            value={statusSelecionado}
+                            onChange={(e) => {
+                                setPaginaAtual(0);
+                                setStatusSelecionado(e.target.value);
+                            }}
+                        >
                             <option value="">Status</option>
-                            <option value="">Reservado</option>
-                            <option value="">Disponível</option>
+                            <option value="RESERVADO">Reservado</option>
+                            <option value="DISPONIVEL">Disponível</option>
                         </select>
                         <Filter className="absolute top-1/2 right-3 -translate-y-1/2 text-[#727272]" size={14} />
                     </div>
@@ -170,7 +155,6 @@ export function Catalogo() {
             </div>
 
             <div className="mt-12 w-9/10 h-7/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-
                 {carregando ? (
                     <>
                         {[...Array(5)].map((_, index) => (
@@ -186,7 +170,6 @@ export function Catalogo() {
                                     id={livro.id}
                                     livro={livro.nome}
                                     autor={livro.autor}
-                                    descricao={livro.descricao}
                                     categoria={livro.categoria}
                                     qtdEmprestimos={livro.qtdEmprestimos || 0}
                                     qtdLivros={livro.quantidade}

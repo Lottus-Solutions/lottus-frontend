@@ -102,26 +102,30 @@ export function Emprestimos() {
                         <Inbox className="w-8 h-8 text-[#0292B7]" />
                         <p className="text-base">Carregando...</p>
                     </div>
-                ) : emprestimos.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full gap-3 mb-20">
-                        <Inbox className="w-8 h-8 text-[#0292B7]" />
-                        <div className="flex flex-col items-center gap-1">
-                            <p className="text-base">Nenhum empréstimo ativo!</p>
-                            <p className="text-[#727272]">Nenhum empréstimo em andamento foi localizado.</p>
-                        </div>
-                    </div>
                 ) : (
-                    emprestimos.map((emprestimo, index) => (
-                        <EmprestimoListItem
-                            key={index}
-                            id={emprestimo.id}
-                            aluno={emprestimo.aluno?.nome || 'Nome do Aluno'}
-                            livro={emprestimo.livro?.nome || 'Nome do Livro'}
-                            dataDevolucao={emprestimo.dataDevolucaoPrevista}
-                            diasAtraso={emprestimo.diasAtrasados}
-                            atualizarLista={() => buscarEmprestimos(paginaAtual)}
-                        />
-                    ))
+                    <>
+                        {emprestimos.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center h-full gap-3 mb-20">
+                                <Inbox className="w-8 h-8 text-[#0292B7]" />
+                                <div className="flex flex-col items-center gap-1">
+                                    <p className="text-base">Nenhum empréstimo ativo!</p>
+                                    <p className="text-[#727272]">Nenhum empréstimo em andamento foi localizado.</p>
+                                </div>
+                            </div>
+                        ) : (
+                            emprestimos.map((emprestimo, index) => (
+                                <EmprestimoListItem
+                                    key={index}
+                                    id={emprestimo.id}
+                                    aluno={emprestimo.aluno?.nome || 'Nome do Aluno'}
+                                    livro={emprestimo.livro?.nome || 'Nome do Livro'}
+                                    dataDevolucao={emprestimo.dataDevolucaoPrevista}
+                                    diasAtraso={emprestimo.diasAtrasados}
+                                    atualizarLista={() => buscarEmprestimos(paginaAtual)}
+                                />
+                            ))
+                        )}
+                    </>
                 )}
             </div>
             {!carregando && emprestimos.length > 0 && (
