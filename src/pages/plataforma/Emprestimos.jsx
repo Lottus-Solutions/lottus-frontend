@@ -63,7 +63,7 @@ export function Emprestimos() {
 
     function handleToggleAtrasados() {
         setMostrarAtrasados(!mostrarAtrasados);
-        setPaginaAtual(0); // Reseta para a primeira página
+        setPaginaAtual(0);
     }
 
     return (
@@ -82,7 +82,7 @@ export function Emprestimos() {
                             if (debounceRef.current) {
                                 clearTimeout(debounceRef.current);
                             }
-                            buscarEmprestimos(0); // Busca imediata ao pressionar Enter
+                            buscarEmprestimos(0);
                         }
                     }}
                 />
@@ -97,58 +97,52 @@ export function Emprestimos() {
                 </div>
             </div>
             <div className="mt-12 w-9/10 h-7/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-                {carregando ? (
+
+                {emprestimos.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full gap-3 mb-20">
                         <Inbox className="w-8 h-8 text-[#0292B7]" />
-                        <p className="text-base">Carregando...</p>
+                        <div className="flex flex-col items-center gap-1">
+                            <p className="text-base">Nenhum empréstimo ativo!</p>
+                            <p className="text-[#727272]">Nenhum empréstimo em andamento foi localizado.</p>
+                        </div>
                     </div>
                 ) : (
-                    <>
-                        {emprestimos.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center h-full gap-3 mb-20">
-                                <Inbox className="w-8 h-8 text-[#0292B7]" />
-                                <div className="flex flex-col items-center gap-1">
-                                    <p className="text-base">Nenhum empréstimo ativo!</p>
-                                    <p className="text-[#727272]">Nenhum empréstimo em andamento foi localizado.</p>
-                                </div>
-                            </div>
-                        ) : (
-                            emprestimos.map((emprestimo, index) => (
-                                <EmprestimoListItem
-                                    key={index}
-                                    id={emprestimo.id}
-                                    aluno={emprestimo.aluno?.nome || 'Nome do Aluno'}
-                                    livro={emprestimo.livro?.nome || 'Nome do Livro'}
-                                    dataDevolucao={emprestimo.dataDevolucaoPrevista}
-                                    diasAtraso={emprestimo.diasAtrasados}
-                                    atualizarLista={() => buscarEmprestimos(paginaAtual)}
-                                />
-                            ))
-                        )}
-                    </>
+                    emprestimos.map((emprestimo, index) => (
+                        <EmprestimoListItem
+                            key={index}
+                            id={emprestimo.id}
+                            aluno={emprestimo.aluno?.nome || 'Nome do Aluno'}
+                            livro={emprestimo.livro?.nome || 'Nome do Livro'}
+                            dataDevolucao={emprestimo.dataDevolucaoPrevista}
+                            diasAtraso={emprestimo.diasAtrasados}
+                            atualizarLista={() => buscarEmprestimos(paginaAtual)}
+                        />
+                    ))
                 )}
+                {!carregando && emprestimos.length > 0 && (
+                    <div className="flex justify-end items-center gap-6 mt-4">
+                        <button
+                            disabled={paginaAtual === 0}
+                            onClick={() => setPaginaAtual(paginaAtual - 1)}
+                            className="p-2 text-[#0292B7] disabled:cursor-not-allowed transition"
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+                        <span className="text-sm text-gray-700">
+                            <span>{paginaAtual + 1}</span> / <span>{totalPaginas}</span>
+                        </span>
+                        <button
+                            disabled={paginaAtual + 1 >= totalPaginas}
+                            onClick={() => setPaginaAtual(paginaAtual + 1)}
+                            className="p-2 text-[#0292B7] disabled:cursor-not-allowed transition"
+                        >
+                            <ChevronRight size={20} />
+                        </button>
+                    </div>
+                )}
+
             </div>
-            {!carregando && emprestimos.length > 0 && (
-                <div className="flex justify-end items-center gap-6 mt-4">
-                    <button
-                        disabled={paginaAtual === 0}
-                        onClick={() => setPaginaAtual(paginaAtual - 1)}
-                        className="p-2 text-[#0292B7] disabled:cursor-not-allowed transition"
-                    >
-                        <ChevronLeft size={20} />
-                    </button>
-                    <span className="text-sm text-gray-700">
-                        <span>{paginaAtual + 1}</span> / <span>{totalPaginas}</span>
-                    </span>
-                    <button
-                        disabled={paginaAtual + 1 >= totalPaginas}
-                        onClick={() => setPaginaAtual(paginaAtual + 1)}
-                        className="p-2 text-[#0292B7] disabled:cursor-not-allowed transition"
-                    >
-                        <ChevronRight size={20} />
-                    </button>
-                </div>
-            )}
+
         </div>
     );
 }

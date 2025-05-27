@@ -2,9 +2,9 @@ import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { CardLivroAtual } from '../SiteComponents/CardLivroAtual';
 import { HistoricoLeituraListItem } from '../HistoricoLeituraListItem';
 import { ConfirmExcluirLivro } from './ConfirmExcluirLivro';
+import { CardLivroAtual } from '../CardLivroAtual';
 
 export function ModalDetalhesAluno({ onClose, aluno, nomeTurma }) {
     const [confirmExcluir, setConfirmExcluir] = useState(false);
