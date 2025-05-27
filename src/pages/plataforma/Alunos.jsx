@@ -7,19 +7,27 @@ import { Perfil } from "../../components/Perfil";
 import { Search } from "../../components/Search";
 import { ModalAdicionarAluno } from "../../components/Modals/ModalAdicionarAluno";
 import { ModalDetalhesAluno } from "../../components/Modals/ModalDetalhesAluno";
+import { AlertInform } from '../../components/Alerts/AlertInform';
 
 export function Alunos() {
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
     const [mostrarDetalhes, setMostrarDetalhes] = useState(false);
     const [alunoSelecionado, setAlunoSelecionado] = useState(null);
     const [alunos, setAlunos] = useState([]);
+    const [termoBusca, setTermoBusca] = useState("");
+    const [alertExcluir, setAlertExcluir] = useState(false);
+
     const { id } = useParams();
     const { state } = useLocation();
     const nomeTurma = state?.nomeTurma || "Turma";
 
     useEffect(() => {
-        buscarAlunos();
-    }, [id]);
+        if (termoBusca.trim() === "") {
+            buscarAlunos();
+        } else {
+            buscarAlunosPorNome(termoBusca);
+        }
+    }, [id, termoBusca]);
 
     const buscarAlunos = () => {
         axios.get(`/alunos/turma/${id}`)
@@ -31,9 +39,30 @@ export function Alunos() {
             });
     };
 
+    const buscarAlunosPorNome = (nome) => {
+        axios.get(`/alunos/buscar-aluno-nome-turma/${id}/${nome}`)
+            .then(response => {
+                setAlunos(response.data);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar aluno por nome:", error);
+            });
+    };
+
     const abrirDetalhes = (aluno) => {
         setAlunoSelecionado(aluno);
         setMostrarDetalhes(true);
+    };
+
+    const aoExcluirAluno = () => {
+        setMostrarDetalhes(false);
+        setAlunoSelecionado(null);
+        buscarAlunos();
+        setAlertExcluir(true);
+
+        setTimeout(() => {
+            setAlertExcluir(false);
+        }, 2000);
     };
 
     return (
@@ -43,7 +72,11 @@ export function Alunos() {
             <p className="text-base text-[#0292B7] mb-10">{nomeTurma}</p>
 
             <div className="flex justify-between w-9/10">
-                <Search placeholder="Busque por nome" />
+                <Search
+                    placeholder="Busque por nome"
+                    value={termoBusca}
+                    onChange={(e) => setTermoBusca(e.target.value)}
+                />
                 <div onClick={() => setMostrarModalAdicionar(true)}>
                     <BotaoPrincipal nome="Adicionar Aluno" />
                 </div>
@@ -76,9 +109,19 @@ export function Alunos() {
                     onClose={() => {
                         setMostrarDetalhes(false);
                         setAlunoSelecionado(null);
+                        buscarAlunos();
                     }}
                     aluno={alunoSelecionado}
                     nomeTurma={nomeTurma}
+                    onExcluirAluno={aoExcluirAluno}
+                />
+            )}
+
+            {alertExcluir && (
+                <AlertInform
+                    onClose={() => setAlertExcluir(false)}
+                    titulo="Aluno excluído com sucesso"
+                    descricao="O registro do aluno não está mais ativo no sistema."
                 />
             )}
         </div>
