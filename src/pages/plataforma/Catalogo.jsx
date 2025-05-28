@@ -10,62 +10,22 @@ import axios from "../../configs/axiosConfig";
 import { CatalogoListItemSkeleton } from "../../components/Skelletons/CatalogoListItemSkeleton";
 
 export function Catalogo() {
-    const [adicionarLivro, setAdicionarLivro] = useState(false);
-    const [modalCategorias, setModalCategorias] = useState(false);
     const [livros, setLivros] = useState([]);
-    const [busca, setBusca] = useState("");
     const [categorias, setCategorias] = useState([]);
-    const [categoriaSelecionadaId, setCategoriaSelecionadaId] = useState("");
-    const [statusSelecionado, setStatusSelecionado] = useState(""); // Estado para status
+
+    const [busca, setBusca] = useState("");
+    const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
+    const [statusSelecionado, setStatusSelecionado] = useState("");
 
     const [paginaAtual, setPaginaAtual] = useState(0);
     const [totalPaginas, setTotalPaginas] = useState(1);
+
     const [carregando, setCarregando] = useState(false);
+    const [modalAdicionarLivro, setModalAdicionarLivro] = useState(false);
+    const [modalCategorias, setModalCategorias] = useState(false);
 
     const debounceRef = useRef(null);
     const tamanhoPagina = 50;
-
-    const buscarLivros = (pagina = 0) => {
-        setCarregando(true);
-
-        const params = {
-            pagina,
-            tamanho: tamanhoPagina
-        };
-
-        let endpoint = "/livros/buscar";
-
-        if (statusSelecionado) {
-            endpoint = "/livros/filtrar-por-status";
-            params.statusvalue = statusSelecionado;
-
-            console.log("Buscando livros com status:", statusSelecionado);
-        } else if (busca.trim() !== "") {
-            params.valor = busca;
-        }
-
-
-        axios.get(endpoint, { params })
-            .then(response => {
-                setLivros(response.data.content);
-                setPaginaAtual(response.data.number);
-                setTotalPaginas(response.data.totalPages);
-            })
-            .catch(error => {
-                console.error("Erro ao buscar livros:", error);
-            })
-            .finally(() => setCarregando(false));
-    };
-
-    const buscarCategorias = () => {
-        axios.get("/categorias")
-            .then(response => {
-                setCategorias(response.data);
-            })
-            .catch(error => {
-                console.error("Erro ao buscar categorias:", error);
-            });
-    };
 
     useEffect(() => {
         buscarCategorias();
@@ -76,7 +36,6 @@ export function Catalogo() {
             if (debounceRef.current) {
                 clearTimeout(debounceRef.current);
             }
-
             debounceRef.current = setTimeout(() => {
                 buscarLivros(0);
             }, 500);
@@ -89,7 +48,46 @@ export function Catalogo() {
         } else {
             buscarLivros(paginaAtual);
         }
-    }, [busca, categoriaSelecionadaId, statusSelecionado, paginaAtual]);
+    }, [busca, categoriaSelecionada, statusSelecionado, paginaAtual]);
+
+    function buscarLivros(pagina = 0) {
+        setCarregando(true);
+        const params = new URLSearchParams();
+
+        if (busca.trim() !== "") {
+            params.append("valor", busca.trim());
+        }
+        if (categoriaSelecionada) {
+            params.append("categoriaId", categoriaSelecionada);
+        }
+        if (statusSelecionado) {
+            params.append("status", statusSelecionado);
+        }
+
+        params.append("pagina", pagina.toString());
+        params.append("tamanho", tamanhoPagina.toString());
+
+        axios.get(`/livros/buscar?${params.toString()}`)
+            .then(response => {
+                setLivros(response.data.content || response.data);
+                setPaginaAtual(response.data.number || pagina);
+                setTotalPaginas(response.data.totalPages || 1);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar livros:", error);
+            })
+            .finally(() => setCarregando(false));
+    }
+
+    function buscarCategorias() {
+        axios.get("/categorias")
+            .then(response => {
+                setCategorias(response.data);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar categorias:", error);
+            });
+    }
 
     return (
         <div className="h-screen pt-16 pl-16 relative">
@@ -110,10 +108,10 @@ export function Catalogo() {
                         <select
                             name="Categoria"
                             className="w-fit border-[#727272] text-[#727272] border-[1px] rounded-full pl-3 pr-8 outline-0 text-xs h-9 appearance-none"
-                            value={categoriaSelecionadaId}
+                            value={categoriaSelecionada}
                             onChange={(e) => {
                                 setPaginaAtual(0);
-                                setCategoriaSelecionadaId(e.target.value);
+                                setCategoriaSelecionada(e.target.value);
                             }}
                         >
                             <option value="">Categorias</option>
@@ -148,7 +146,7 @@ export function Catalogo() {
                     >
                         <ChartColumnStacked className="w-5 h-5 text-[#0292B7]" />
                     </button>
-                    <div onClick={() => setAdicionarLivro(true)}>
+                    <div onClick={() => setModalAdicionarLivro(true)}>
                         <BotaoPrincipal nome="Adicionar Livro" />
                     </div>
                 </div>
@@ -208,9 +206,9 @@ export function Catalogo() {
                 )}
             </div>
 
-            {adicionarLivro && (
+            {modalAdicionarLivro && (
                 <ModalAdicionarLivro
-                    onClose={() => setAdicionarLivro(false)}
+                    onClose={() => setModalAdicionarLivro(false)}
                     atualizarLista={() => buscarLivros(paginaAtual)}
                 />
             )}

@@ -1,17 +1,68 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { BotaoPrincipal } from "../botoes/BotaoPrincipal";
 import { motion } from 'framer-motion';
+import axios from "../../configs/axiosConfig";
 
 export function ModalAdicionarEmprestimo(props) {
     const [dataDevolucao, setDataDevolucao] = useState("");
+    const [turmas, setTurmas] = useState([]);
+    const [turmaId, setTurmaId] = useState("");
+    const [nomeAluno, setNomeAluno] = useState("");
+    const [alunos, setAlunos] = useState([]);
+    const [alunoSelecionado, setAlunoSelecionado] = useState(null);
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    const debounceRef = useRef(null);
 
     useEffect(() => {
+        getTurmas();
         const hoje = new Date();
         hoje.setDate(hoje.getDate() + 15);
         const dataFormatada = hoje.toISOString().split('T')[0];
         setDataDevolucao(dataFormatada);
     }, []);
+
+    useEffect(() => {
+        if (turmaId && nomeAluno.trim() !== "") {
+            if (debounceRef.current) clearTimeout(debounceRef.current);
+
+            debounceRef.current = setTimeout(() => {
+                buscarAlunos();
+            }, 500);
+
+            return () => clearTimeout(debounceRef.current);
+        } else {
+            setAlunos([]);
+        }
+    }, [nomeAluno, turmaId]);
+
+    function getTurmas() {
+        axios.get("/alunos/listar-turmas")
+            .then(response => {
+                setTurmas(response.data);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar turmas:", error);
+            });
+    }
+
+    function buscarAlunos() {
+        axios.get(`/alunos/buscar-aluno-nome-turma/${turmaId}/${nomeAluno}`)
+            .then(response => {
+                setAlunos(response.data);
+                setShowDropdown(true);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar alunos:", error);
+            });
+    }
+
+    function handleSelectAluno(aluno) {
+        setAlunoSelecionado(aluno);
+        setNomeAluno(aluno.nome);
+        setShowDropdown(false);
+    }
 
     return (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -35,11 +86,55 @@ export function ModalAdicionarEmprestimo(props) {
                 <form className="flex flex-col gap-4 w-[80%] mb-6">
                     <p className="text-[#414651]">Livro</p>
                     <p>{props.livro}</p>
+
+                    <p className="text-[#414651]">Turma</p>
+                    <select
+                        value={turmaId}
+                        onChange={(e) => {
+                            setTurmaId(e.target.value);
+                            setAlunoSelecionado(null);
+                            setNomeAluno("");
+                        }}
+                        className="border border-gray-300 rounded px-2 py-[5px] text-sm outline-0"
+                    >
+                        <option value="">Selecione uma turma</option>
+                        {turmas.map((turma) => (
+                            <option key={turma.id} value={turma.id}>
+                                {turma.serie}
+                            </option>
+                        ))}
+                    </select>
+
                     <p className="text-[#414651]">Nome do aluno</p>
-                    <input
-                        type="text"
-                        className="border border-gray-300 rounded px-2 py-[5px] text-sm"
-                    />
+                    <div className="relative">
+                        <input
+                            type="text"
+                            value={nomeAluno}
+                            onChange={(e) => {
+                                setNomeAluno(e.target.value);
+                                setAlunoSelecionado(null);
+                            }}
+                            onFocus={() => {
+                                if (alunos.length > 0) setShowDropdown(true);
+                            }}
+                            className="border border-gray-300 rounded px-2 py-[5px] text-sm w-full"
+                            placeholder="Digite para buscar..."
+                        />
+                        {showDropdown && alunos.length > 0 && (
+                            <ul className="absolute z-50 bg-white border border-gray-300 rounded mt-1 w-full max-h-40 overflow-y-auto">
+                                {alunos.map((aluno) => (
+                                    <li
+                                        key={aluno.id}
+                                        className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                                        onClick={() => handleSelectAluno(aluno)}
+                                    >
+                                        {aluno.nome}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+
                     <p className="text-[#414651]">Data de devolução</p>
                     <input
                         type="date"

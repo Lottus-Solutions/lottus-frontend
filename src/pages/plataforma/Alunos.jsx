@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import axios from "../../configs/axiosConfig";
 import { AlunoListItem } from "../../components/AlunoListItem";
@@ -17,17 +17,31 @@ export function Alunos() {
     const [termoBusca, setTermoBusca] = useState("");
     const [alertExcluir, setAlertExcluir] = useState(false);
 
+    const debounceRef = useRef(null);
+
     const { id } = useParams();
     const { state } = useLocation();
     const nomeTurma = state?.nomeTurma || "Turma";
 
     useEffect(() => {
-        if (termoBusca.trim() === "") {
-            buscarAlunos();
+        if (termoBusca.trim() !== "") {
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+
+            debounceRef.current = setTimeout(() => {
+                buscarAlunosPorNome(termoBusca);
+            }, 500);
+
+            return () => {
+                if (debounceRef.current) {
+                    clearTimeout(debounceRef.current);
+                }
+            };
         } else {
-            buscarAlunosPorNome(termoBusca);
+            buscarAlunos();
         }
-    }, [id, termoBusca]);
+    }, [termoBusca, id]);
 
     const buscarAlunos = () => {
         axios.get(`/alunos/turma/${id}`)
