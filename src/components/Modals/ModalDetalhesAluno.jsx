@@ -5,10 +5,12 @@ import axios from 'axios';
 import { HistoricoLeituraListItem } from '../HistoricoLeituraListItem';
 import { ConfirmExcluirAluno } from './ConfirmExcluirAluno';
 import { CardLivroAtual } from '../CardLivroAtual';
+import { CardEditarAluno } from '../CardEditarAluno';
 
 export function ModalDetalhesAluno({ onClose, aluno, nomeTurma, onExcluirAluno }) {
     const [confirmExcluir, setConfirmExcluir] = useState(false);
     const [historico, setHistorico] = useState([]);
+    const [modalEditar, setModalEditar] = useState(false);
 
     useEffect(() => {
         async function fetchHistorico() {
@@ -78,7 +80,7 @@ export function ModalDetalhesAluno({ onClose, aluno, nomeTurma, onExcluirAluno }
                                 src="/images/edit-circle.svg"
                                 alt="Editar"
                                 className="cursor-pointer"
-                                onClick={() => console.log("Editar aluno")}
+                                onClick={() => setModalEditar(true)}
                             />
                             <img
                                 src="/images/delete-circle.svg"
@@ -104,7 +106,6 @@ export function ModalDetalhesAluno({ onClose, aluno, nomeTurma, onExcluirAluno }
                     </div>
                 </motion.div>
 
-                {/* MODAL DE CONFIRMAÇÃO */}
                 {confirmExcluir && (
                     <ConfirmExcluirAluno
                         onClose={() => setConfirmExcluir(false)}
@@ -113,12 +114,16 @@ export function ModalDetalhesAluno({ onClose, aluno, nomeTurma, onExcluirAluno }
                                 await axios.delete(`/alunos/remover/${aluno.matricula}`);
                                 setConfirmExcluir(false);
                                 onClose();
-                                if (onExcluirAluno) onExcluirAluno(); // <-- aqui chamamos a função passada via props
+                                if (onExcluirAluno) onExcluirAluno();
                             } catch (error) {
                                 console.error("Erro ao remover aluno:", error);
                             }
                         }}
                     />
+                )}
+
+                {modalEditar && (
+                    <CardEditarAluno onClose={() => setModalEditar(false)} />
                 )}
             </div>
         </>

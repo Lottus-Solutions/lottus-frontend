@@ -10,9 +10,9 @@ export function ConfirmExcluirAluno({ onClose, onConfirm }) {
         >
             <img src="/images/remover.svg" alt="Excluir" className="w-12" />
             <div className="flex flex-col gap-2">
-                <p className="font-semibold">Remover aluno</p>
+                <p className="font-semibold">Remover categoria</p>
                 <p className="text-[#727272] text-sm">
-                    Você está prestes a remover este aluno do sistema. Essa operação não poderá ser desfeita.
+                    Você está prestes a remover esta categoria do sistema. Essa operação não poderá ser desfeita.
                 </p>
             </div>
             <div className="flex gap-4 w-full">
