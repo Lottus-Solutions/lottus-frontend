@@ -172,6 +172,7 @@ export function Catalogo() {
                                     qtdEmprestimos={livro.qtdEmprestimos || 0}
                                     qtdLivros={livro.quantidade}
                                     status={livro.status?.toLowerCase() || "disponível"}
+                                    
                                 />
                             ))
                         ) : (

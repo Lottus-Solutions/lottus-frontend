@@ -66,7 +66,10 @@ export function CatalogoListItem(props) {
             )}
 
             {modalEmprestimo && (
-                <ModalAdicionarEmprestimo onClose={() => setModalEmprestimo(false)} livro={props.livro} />
+                <ModalAdicionarEmprestimo
+                 onClose={() => setModalEmprestimo(false)}
+                  livro={props.livro}
+                  livroId={props.id} />
             )}
         </div>
 

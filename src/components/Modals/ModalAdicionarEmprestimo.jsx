@@ -12,7 +12,6 @@ export function ModalAdicionarEmprestimo(props) {
     const [alunos, setAlunos] = useState([]);
     const [alunoSelecionado, setAlunoSelecionado] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
-
     const debounceRef = useRef(null);
 
     useEffect(() => {
@@ -39,12 +38,8 @@ export function ModalAdicionarEmprestimo(props) {
 
     function getTurmas() {
         axios.get("/alunos/listar-turmas")
-            .then(response => {
-                setTurmas(response.data);
-            })
-            .catch(error => {
-                console.error("Erro ao buscar turmas:", error);
-            });
+            .then(response => setTurmas(response.data))
+            .catch(error => console.error("Erro ao buscar turmas:", error));
     }
 
     function buscarAlunos() {
@@ -53,15 +48,38 @@ export function ModalAdicionarEmprestimo(props) {
                 setAlunos(response.data);
                 setShowDropdown(true);
             })
-            .catch(error => {
-                console.error("Erro ao buscar alunos:", error);
-            });
+            .catch(error => console.error("Erro ao buscar alunos:", error));
     }
 
     function handleSelectAluno(aluno) {
         setAlunoSelecionado(aluno);
         setNomeAluno(aluno.nome);
         setShowDropdown(false);
+    }
+
+    function realizarEmprestimo() {
+       console.log(alunoSelecionado)
+        if (!alunoSelecionado || !props.livroId) {
+            alert("Selecione um aluno e um livro válido!");
+            return;
+        }
+
+        const payload = {
+
+            matriculaAluno: alunoSelecionado.matricula,
+            fk_livro: props.livroId,
+            dataEmprestimo: new Date().toISOString().split("T")[0]
+        };
+
+        axios.post("/emprestimos", payload)
+            .then(() => {
+                alert("Empréstimo realizado com sucesso!");
+                props.onClose(); // fecha o modal
+            })
+            .catch((err) => {
+                console.error("Erro ao realizar empréstimo:", err);
+                alert("Erro ao realizar empréstimo.");
+            });
     }
 
     return (
@@ -83,6 +101,7 @@ export function ModalAdicionarEmprestimo(props) {
                     <h3 className="text-xl">Novo Empréstimo</h3>
                     <p className="text-[#727272]">Insira as informações para realizar um novo empréstimo</p>
                 </div>
+
                 <form className="flex flex-col gap-4 w-[80%] mb-6">
                     <p className="text-[#414651]">Livro</p>
                     <p>{props.livro}</p>
@@ -99,9 +118,7 @@ export function ModalAdicionarEmprestimo(props) {
                     >
                         <option value="">Selecione uma turma</option>
                         {turmas.map((turma) => (
-                            <option key={turma.id} value={turma.id}>
-                                {turma.serie}
-                            </option>
+                            <option key={turma.id} value={turma.id}>{turma.serie}</option>
                         ))}
                     </select>
 
@@ -114,9 +131,7 @@ export function ModalAdicionarEmprestimo(props) {
                                 setNomeAluno(e.target.value);
                                 setAlunoSelecionado(null);
                             }}
-                            onFocus={() => {
-                                if (alunos.length > 0) setShowDropdown(true);
-                            }}
+                            onFocus={() => alunos.length > 0 && setShowDropdown(true)}
                             className="border border-gray-300 rounded px-2 py-[5px] text-sm w-full"
                             placeholder="Digite para buscar..."
                         />
@@ -144,7 +159,7 @@ export function ModalAdicionarEmprestimo(props) {
                     />
                 </form>
 
-                <BotaoPrincipal nome="Realizar Empréstimo" />
+                <BotaoPrincipal nome="Realizar Empréstimo" onClick={realizarEmprestimo} />
             </motion.div>
         </div>
     );

@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { HistoricoLeituraListItem } from '../HistoricoLeituraListItem';
-import { ConfirmExcluirLivro } from './ConfirmExcluirLivro';
+import { ConfirmExcluirAluno } from './ConfirmExcluirAluno';
 import { CardLivroAtual } from '../CardLivroAtual';
 
 export function ModalDetalhesAluno({ onClose, aluno, nomeTurma, onExcluirAluno }) {
