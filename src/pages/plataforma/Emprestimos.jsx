@@ -111,8 +111,8 @@ export function Emprestimos() {
                         <EmprestimoListItem
                             key={index}
                             id={emprestimo.id}
-                            aluno={emprestimo.aluno?.nome || 'Nome do Aluno'}
-                            livro={emprestimo.livro?.nome || 'Nome do Livro'}
+                            aluno={emprestimo.nomeAluno}
+                            livro={emprestimo.nomeLivro}
                             dataDevolucao={emprestimo.dataDevolucaoPrevista}
                             diasAtraso={emprestimo.diasAtrasados}
                             atualizarLista={() => buscarEmprestimos(paginaAtual)}

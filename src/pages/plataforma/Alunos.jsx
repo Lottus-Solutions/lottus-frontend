@@ -8,6 +8,7 @@ import { Search } from "../../components/Search";
 import { ModalAdicionarAluno } from "../../components/Modals/ModalAdicionarAluno";
 import { ModalDetalhesAluno } from "../../components/Modals/ModalDetalhesAluno";
 import { AlertInform } from '../../components/Alerts/AlertInform';
+import { a } from "framer-motion/client";
 
 export function Alunos() {
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
@@ -117,7 +118,7 @@ export function Alunos() {
                             livrosLidos={aluno.qtdLivrosLidos}
                             livrosTotais={4}
                             bonus={aluno.qtdBonus}
-                            livroAtual="Harry Potter e a Pedra Filosofal"
+                            livroAtual={aluno.livroAtual}
                         />
                     </div>
                 ))}

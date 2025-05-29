@@ -4,6 +4,7 @@ import { ProgressoLeitura } from "./ProgressoLeitura";
 import { ModalDetalhesAluno } from "./Modals/ModalDetalhesAluno";
 
 export function AlunoListItem(props) {
+    
     const [modalDetalhes, setModalDetalhes] = useState(false);
     const [alunoData, setAlunoData] = useState({
         nome: props.nome,
