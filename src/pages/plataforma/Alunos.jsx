@@ -23,6 +23,14 @@ export function Alunos() {
     const { state } = useLocation();
     const nomeTurma = state?.nomeTurma || "Turma";
 
+    const atualizarAlunoNaLista = (alunoAtualizado) => {
+        setAlunos(prevAlunos =>
+            prevAlunos.map(aluno =>
+                aluno.matricula === alunoAtualizado.matricula ? alunoAtualizado : aluno
+            )
+        );
+    };
+
     useEffect(() => {
         if (termoBusca.trim() !== "") {
             if (debounceRef.current) {
@@ -41,7 +49,7 @@ export function Alunos() {
         } else {
             buscarAlunos();
         }
-    }, [termoBusca, id]);
+    }, [termoBusca, id, alunos]);
 
     const buscarAlunos = () => {
         axios.get(`/alunos/turma/${id}`)
@@ -79,6 +87,9 @@ export function Alunos() {
         }, 2000);
     };
 
+    
+
+
     return (
         <div className="h-screen pt-16 pl-16">
             <Perfil />
@@ -100,6 +111,7 @@ export function Alunos() {
                 {alunos.map(aluno => (
                     <div key={aluno.matricula} onClick={() => abrirDetalhes(aluno)}>
                         <AlunoListItem
+                            turma={nomeTurma}
                             matricula={aluno.matricula}
                             nome={aluno.nome}
                             livrosLidos={aluno.qtdLivrosLidos}
@@ -118,18 +130,6 @@ export function Alunos() {
                 />
             )}
 
-            {mostrarDetalhes && alunoSelecionado && (
-                <ModalDetalhesAluno
-                    onClose={() => {
-                        setMostrarDetalhes(false);
-                        setAlunoSelecionado(null);
-                        buscarAlunos();
-                    }}
-                    aluno={alunoSelecionado}
-                    nomeTurma={nomeTurma}
-                    onExcluirAluno={aoExcluirAluno}
-                />
-            )}
 
             {alertExcluir && (
                 <AlertInform

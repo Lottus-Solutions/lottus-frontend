@@ -67,7 +67,7 @@ export function Catalogo() {
         params.append("pagina", pagina.toString());
         params.append("tamanho", tamanhoPagina.toString());
 
-        axios.get(`/livros/buscar?${params.toString()}`)
+        axios.get(`/livros?${params.toString()}`)
             .then(response => {
                 setLivros(response.data.content || response.data);
                 setPaginaAtual(response.data.number || pagina);

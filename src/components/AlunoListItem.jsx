@@ -5,6 +5,19 @@ import { ModalDetalhesAluno } from "./Modals/ModalDetalhesAluno";
 
 export function AlunoListItem(props) {
     const [modalDetalhes, setModalDetalhes] = useState(false);
+    const [alunoData, setAlunoData] = useState({
+        nome: props.nome,
+        livrosTotais: props.livrosTotais,
+        livrosLidos: props.livrosLidos,
+        bonus: props.bonus,
+        livroAtual: props.livroAtual,
+        matricula: props.matricula,
+    });
+
+    const atualizarAluno = (novoAluno) => {
+        setAlunoData(prev => ({ ...prev, ...novoAluno }));
+    };
+
 
     return (
         <div className="flex gap-x-12 border-b-[1px] border-[#727272] pb-8 justify-around items-center">
@@ -27,20 +40,14 @@ export function AlunoListItem(props) {
                 <BotaoPrincipal nome="Acessar Perfil" onClick={() => setModalDetalhes(true)} />
             </div>
 
+            
             {modalDetalhes && (
                 <ModalDetalhesAluno
                     onClose={() => setModalDetalhes(false)}
-                    id={props.id}
-                    livro={props.livro}
-                    autor={props.autor}
-                    categoria={props.categoria}
-                    quantidade={props.qtdLivros}
-                    reservados={props.qtdEmprestimos}
-                    descricao={props.descricao}
+                    matricula={props.matricula}
+                    turma={props.turma}
                 />
             )}
         </div>
-
-
     );
 }
