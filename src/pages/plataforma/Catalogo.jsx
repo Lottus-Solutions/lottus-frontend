@@ -32,6 +32,11 @@ export function Catalogo() {
     }, []);
 
     useEffect(() => {
+        buscarLivros(0);
+    }, [categorias]);
+
+
+    useEffect(() => {
         if (busca.trim() !== "") {
             if (debounceRef.current) {
                 clearTimeout(debounceRef.current);
@@ -116,7 +121,7 @@ export function Catalogo() {
                         >
                             <option value="">Categorias</option>
                             {categorias.map((categoria) => (
-                                <option key={categoria.id} value={categoria.id}>
+                                <option key={categoria.id} value={categoria.id} style={{ color: categoria.cor }}>
                                     {categoria.nome}
                                 </option>
                             ))}
@@ -162,19 +167,23 @@ export function Catalogo() {
                 ) : (
                     <>
                         {Array.isArray(livros) && livros.length > 0 ? (
-                            livros.map(livro => (
-                                <CatalogoListItem
-                                    key={livro.id}
-                                    id={livro.id}
-                                    livro={livro.nome}
-                                    autor={livro.autor}
-                                    categoria={livro.categoria}
-                                    qtdEmprestimos={livro.qtdEmprestimos || 0}
-                                    qtdLivros={livro.quantidade}
-                                    status={livro.status?.toLowerCase() || "disponível"}
-                                    
-                                />
-                            ))
+                            livros.map(livro => {
+                                const categoriaObj = categorias.find(c => c.nome === livro.categoria);
+                                return (
+                                    <CatalogoListItem
+                                        key={livro.id}
+                                        id={livro.id}
+                                        livro={livro.nome}
+                                        autor={livro.autor}
+                                        categoria={livro.categoria}
+                                        cor={categoriaObj?.cor || "#000000"}
+                                        qtdEmprestimos={livro.qtdEmprestimos || 0}
+                                        qtdLivros={livro.quantidade}
+                                        status={livro.status?.toLowerCase() || "disponível"}
+                                    />
+
+                                );
+                            })
                         ) : (
                             <div className="text-center text-sm text-gray-500">Nenhum livro encontrado.</div>
                         )}
@@ -214,8 +223,16 @@ export function Catalogo() {
                 />
             )}
             {modalCategorias && (
-                <ModalCategorias onClose={() => setModalCategorias(false)} />
+                <ModalCategorias
+                    onClose={() => setModalCategorias(false)}
+                    onCategoriasAtualizadas={() => {
+                        buscarCategorias();     // Atualiza a lista de categorias
+                        buscarLivros(0);        // Atualiza os livros filtrados
+                    }}
+                />
+
             )}
+
         </div>
     );
 }

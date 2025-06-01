@@ -27,7 +27,7 @@ export function CatalogoListItem(props) {
             </div>
             <div className="flex flex-col gap-3 w-24">
                 <p className="text-[#727272] text-xs">Categoria</p>
-                <p className="text-xs">{props.categoria}</p>
+                <p className="text-xs" style={{ color: props.cor }}>{props.categoria}</p>
             </div>
             <div className="flex flex-col gap-3 w-24">
                 <p className="text-[#727272] text-xs">Qtd. Livros</p>

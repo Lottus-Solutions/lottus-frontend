@@ -2,10 +2,13 @@ import { X, Check } from "lucide-react";
 import { motion } from 'framer-motion';
 import { BotaoPrincipal } from "./botoes/BotaoPrincipal";
 import { useState } from "react";
+import axios from '../configs/axiosConfig';
 
 export function CardAdicionarCategoria(props) {
     const [selectedColor, setSelectedColor] = useState("#0292B7");
     const [nome, setNome] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const coresDisponiveis = [
         "#D7263D",
@@ -20,13 +23,35 @@ export function CardAdicionarCategoria(props) {
         "#8338EC"
     ];
 
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Aqui você faz a requisição para o backend
-        console.log("Categoria:", nome, "Cor:", selectedColor);
+        setLoading(true);
+        setError(null);
 
-        props.onClose();
+        const novoId = Date.now();
+
+        const payload = {
+            
+            nome: nome,
+            cor: selectedColor
+        };
+
+        try {
+            const response = await axios.post('/categorias', payload);
+
+            // Callback para atualizar lista no componente pai
+            if (props.onCategoriasAtualizadas) {
+                props.onCategoriasAtualizadas();
+            }
+
+            props.onClose();
+
+        } catch (err) {
+            // Se err.response existir, pega a mensagem do backend, senão mensagem padrão
+            setError(err.response?.data?.message || 'Erro ao adicionar categoria.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -40,6 +65,7 @@ export function CardAdicionarCategoria(props) {
                 <button
                     className="absolute top-8 right-8 cursor-pointer"
                     onClick={props.onClose}
+                    disabled={loading}
                 >
                     <X className="text-gray-400" />
                 </button>
@@ -63,6 +89,7 @@ export function CardAdicionarCategoria(props) {
                             onChange={(e) => setNome(e.target.value)}
                             className="border border-gray-300 rounded px-3 py-[6px] text-sm w-full mt-1"
                             required
+                            disabled={loading}
                         />
                     </label>
 
@@ -86,7 +113,9 @@ export function CardAdicionarCategoria(props) {
                         </div>
                     </label>
 
-                    <BotaoPrincipal nome="Salvar" type="submit" />
+                    {error && <p className="text-red-600 mb-2">{error}</p>}
+
+                    <BotaoPrincipal nome={loading ? "Salvando..." : "Salvar"} type="submit" disabled={loading} />
                 </form>
             </motion.div>
         </div>

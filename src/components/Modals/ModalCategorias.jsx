@@ -51,9 +51,13 @@ export function ModalCategorias(props) {
                         {categorias.map((categoria) => (
                             <CategoriaListItem
                                 key={categoria.id}
+                                id={categoria.id}
                                 nome={categoria.nome}
                                 descricao={categoria.descricao}
+                                categoriaCor={categoria.cor}
+                                onCategoriasAtualizadas={buscarCategorias}
                             />
+
                         ))}
                     </div>
 
@@ -64,8 +68,17 @@ export function ModalCategorias(props) {
                 </div>
 
                 {isAdicionando && (
-                    <CardAdicionarCategoria onClose={() => setIsAdicionando(false)} />
+                    <CardAdicionarCategoria
+                        onClose={() => setIsAdicionando(false)}
+                        onCategoriasAtualizadas={() => {
+                            buscarCategorias(); // continua atualizando a lista local
+                            props.onCategoriasAtualizadas(); // notifica o Catalogo
+                            setIsAdicionando(false); // fecha o card
+                        }}
+                    />
+
                 )}
+
             </motion.div>
         </div>
     );
