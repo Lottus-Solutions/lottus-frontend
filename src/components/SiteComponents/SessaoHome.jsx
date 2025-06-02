@@ -2,7 +2,7 @@ import { MoveRight } from "lucide-react";
 
 export function SessaoHome() {
     return (
-        <div className="flex pt-24 px-32 justify-between items-center gap-8" id="home">
+        <div className="flex pt-24 sm:40 px-32 justify-between items-center gap-8" id="home">
             <div className="w-[520px] h-72 flex justify-center flex-col gap-5">
                 <h2 className="text-5xl font-bold">Transforme a gestão da sua <span className="text-[#0292B7]">biblioteca</span> com tecnologia e eficiência.</h2>
                 <p className="text-[#6D6D6D]">Simplifique o controle de empréstimos, organize seu catálogo e acompanhe o histórico de leitura dos alunos de forma prática e eficiente.</p>

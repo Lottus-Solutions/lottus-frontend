@@ -18,7 +18,7 @@ export function ModalAdicionarEmprestimo(props) {
         getTurmas();
         const hoje = new Date();
         hoje.setDate(hoje.getDate() + 15);
-        const dataFormatada = hoje.toISOString().split('T')[0];
+        const dataFormatada = hoje.toLocaleDateString('pt-BR'); // Formato DD/MM/AAAA
         setDataDevolucao(dataFormatada);
     }, []);
 
@@ -58,7 +58,7 @@ export function ModalAdicionarEmprestimo(props) {
     }
 
     function realizarEmprestimo() {
-       console.log(alunoSelecionado)
+        console.log(alunoSelecionado)
         if (!alunoSelecionado || !props.livroId) {
             alert("Selecione um aluno e um livro válido!");
             return;
@@ -151,12 +151,7 @@ export function ModalAdicionarEmprestimo(props) {
                     </div>
 
                     <p className="text-[#414651]">Data de devolução</p>
-                    <input
-                        type="date"
-                        value={dataDevolucao}
-                        onChange={(e) => setDataDevolucao(e.target.value)}
-                        className="border border-gray-300 rounded px-2 py-[5px] text-sm"
-                    />
+                    <p>{dataDevolucao}</p>
                 </form>
 
                 <BotaoPrincipal nome="Realizar Empréstimo" onClick={realizarEmprestimo} />

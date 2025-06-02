@@ -4,6 +4,8 @@ import { SugestaoPerguntas } from "../../components/sugestaoPerguntas";
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "../../configs/axiosConfig.js";
+import ReactMarkdown from 'react-markdown';
+
 
 export function Assistente() {
   const [nomeUsuario, setNomeUsuario] = useState("");
@@ -128,7 +130,7 @@ export function Assistente() {
             className={`relative w-full ${perguntas.length > 0 ? "h-72" : "h-96"
               } overflow-y-auto custom-scrollbar scrollbar-gutter mb-3 p-4 transition-all duration-300`}
           >
-            
+
             <AnimatePresence>
               {chat.map((mensagem, index) => (
                 <motion.div
@@ -146,7 +148,11 @@ export function Assistente() {
                       : "bg-gray-200 text-black"
                       }`}
                   >
-                    {mensagem.texto}
+                    {mensagem.tipo === "resposta" ? (
+                      <ReactMarkdown>{mensagem.texto}</ReactMarkdown>
+                    ) : (
+                      mensagem.texto
+                    )}
                   </div>
                 </motion.div>
               ))}

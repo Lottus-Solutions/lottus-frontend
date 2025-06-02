@@ -121,7 +121,7 @@ export function Catalogo() {
                         >
                             <option value="">Categorias</option>
                             {categorias.map((categoria) => (
-                                <option key={categoria.id} value={categoria.id} style={{ color: categoria.cor }}>
+                                <option key={categoria.id} value={categoria.id}>
                                     {categoria.nome}
                                 </option>
                             ))}
@@ -176,7 +176,7 @@ export function Catalogo() {
                                         livro={livro.nome}
                                         autor={livro.autor}
                                         categoria={livro.categoria}
-                                        cor={categoriaObj?.cor || "#000000"}
+                                        cor={categoriaObj?.cor || "#B0B0B0"}
                                         qtdEmprestimos={livro.qtdEmprestimos || 0}
                                         qtdLivros={livro.quantidade}
                                         status={livro.status?.toLowerCase() || "disponível"}

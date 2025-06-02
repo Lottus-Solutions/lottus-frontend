@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ModalDetalhesLivro } from "../components/Modals/ModalDetalhesLivro";
 import { ModalAdicionarEmprestimo } from "../components/Modals/ModalAdicionarEmprestimo";
 import { BotaoInativo } from "./botoes/BotaoInativo";
+import { CategoriaItem } from "./CategoriaItem";
 
 export function CatalogoListItem(props) {
     const [modalDetalhes, setModalDetalhes] = useState(false);
@@ -27,7 +28,7 @@ export function CatalogoListItem(props) {
             </div>
             <div className="flex flex-col gap-3 w-24">
                 <p className="text-[#727272] text-xs">Categoria</p>
-                <p className="text-xs" style={{ color: props.cor }}>{props.categoria}</p>
+                <CategoriaItem categoria={props.categoria} backgroundColor={props.cor} />
             </div>
             <div className="flex flex-col gap-3 w-24">
                 <p className="text-[#727272] text-xs">Qtd. Livros</p>
@@ -67,9 +68,9 @@ export function CatalogoListItem(props) {
 
             {modalEmprestimo && (
                 <ModalAdicionarEmprestimo
-                 onClose={() => setModalEmprestimo(false)}
-                  livro={props.livro}
-                  livroId={props.id} />
+                    onClose={() => setModalEmprestimo(false)}
+                    livro={props.livro}
+                    livroId={props.id} />
             )}
         </div>
 
