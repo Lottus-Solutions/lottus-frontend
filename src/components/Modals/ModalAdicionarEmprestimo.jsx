@@ -4,6 +4,7 @@ import { BotaoPrincipal } from "../botoes/BotaoPrincipal";
 import { motion } from 'framer-motion';
 import axios from "../../configs/axiosConfig";
 
+
 export function ModalAdicionarEmprestimo(props) {
     const [dataDevolucao, setDataDevolucao] = useState("");
     const [turmas, setTurmas] = useState([]);
@@ -13,6 +14,8 @@ export function ModalAdicionarEmprestimo(props) {
     const [alunoSelecionado, setAlunoSelecionado] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
     const debounceRef = useRef(null);
+    const [error, setError] = useState("");
+
 
     useEffect(() => {
         getTurmas();
@@ -60,7 +63,7 @@ export function ModalAdicionarEmprestimo(props) {
     function realizarEmprestimo() {
         console.log(alunoSelecionado)
         if (!alunoSelecionado || !props.livroId) {
-            alert("Selecione um aluno e um livro válido!");
+            setError("Selecione um aluno antes de realizar o empréstimo.");
             return;
         }
 
@@ -73,17 +76,18 @@ export function ModalAdicionarEmprestimo(props) {
 
         axios.post("/emprestimos", payload)
             .then(() => {
-                alert("Empréstimo realizado com sucesso!");
-                props.onClose(); // fecha o modal
+                props.onClose();
+                props.onEmprestimoFeito && props.onEmprestimoFeito();
             })
             .catch((err) => {
-                console.error("Erro ao realizar empréstimo:", err);
-                alert("Erro ao realizar empréstimo.");
+                setError("Selecione um aluno antes de realizar o empréstimo.");
+                
             });
     }
 
     return (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -149,6 +153,11 @@ export function ModalAdicionarEmprestimo(props) {
                             </ul>
                         )}
                     </div>
+                    {error && (
+                        <div className="bg-red-100 border border-red-400 text-red-500 px-4 py-2 rounded w-full text-sm mt-3">
+                            {error}
+                        </div>
+                    )}
 
                     <p className="text-[#414651]">Data de devolução</p>
                     <p>{dataDevolucao}</p>

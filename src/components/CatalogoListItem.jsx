@@ -70,7 +70,8 @@ export function CatalogoListItem(props) {
                 <ModalAdicionarEmprestimo
                     onClose={() => setModalEmprestimo(false)}
                     livro={props.livro}
-                    livroId={props.id} />
+                    livroId={props.id}
+                    onEmprestimoFeito={props.onEmprestimoFeito} />
             )}
         </div>
 

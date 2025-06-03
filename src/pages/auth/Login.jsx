@@ -8,6 +8,8 @@ export function Login() {
   const [senha, setSenha] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false); // controla exibição da senha
+
   const navigate = useNavigate();
 
   const validarEmail = (email) => {
@@ -18,12 +20,16 @@ export function Login() {
   const fazerLogin = async (e) => {
     e.preventDefault();
 
-    if (!validarEmail(email)) {
+    // trim nos valores antes de validar e enviar
+    const emailTrim = email.trim();
+    const senhaTrim = senha.trim();
+
+    if (!validarEmail(emailTrim)) {
       setError('Email inválido.');
       return;
     }
 
-    if (senha.length < 6) {
+    if (senhaTrim.length < 6) {
       setError('A senha deve ter pelo menos 6 caracteres.');
       return;
     }
@@ -32,8 +38,8 @@ export function Login() {
 
     try {
       const response = await axios.post('http://localhost:8080/auth/login', {
-        email,
-        senha
+        email: emailTrim,
+        senha: senhaTrim
       });
 
       localStorage.setItem('token', response.data.token);
@@ -42,8 +48,6 @@ export function Login() {
       setTimeout(() => {
         navigate('/assistente');
       }, 3000);
-
-
     } catch (erro) {
       if (erro.response) {
         setError('Email ou senha incorretos.');
@@ -90,20 +94,40 @@ export function Login() {
             className="border-[1px] rounded-[8px] w-[90%] text-sm h-8 ps-4 outline-0 border-[#0292B7]"
             required
           />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            className="border-[1px] rounded-[8px] w-[90%] text-sm h-8 ps-4 pe-4 outline-0 border-[#0292B7]"
-            required
-          />
+
+          <div className="relative w-[90%]">
+            <input
+              type={mostrarSenha ? 'text' : 'password'}
+              placeholder="Senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              className="border-[1px] rounded-[8px] w-full text-sm h-8 ps-4 pe-10 outline-0 border-[#0292B7]"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setMostrarSenha(!mostrarSenha)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-[#0292B7] hover:text-[#027799]"
+              tabIndex={-1} // para não focar no botão com tab
+              aria-label={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}
+            >
+              {mostrarSenha ? (
+                // Ícone olho aberto
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              ) : (
+                // Ícone olho fechado
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.965 9.965 0 012.502-4.204m1.373-1.373A9.956 9.956 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-1.115 2.451M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
+                </svg>
+              )}
+            </button>
+          </div>
 
           <div className='w-[90%] flex justify-between items-center'>
-            <div className='flex items-center gap-2'>
-              <input type="checkbox" />
-              <p className='text-xs text-[#717171]'>Lembre-se de mim</p>
-            </div>
             <a href="#" className='text-xs text-[#717171]'>Esqueceu a senha?</a>
           </div>
 

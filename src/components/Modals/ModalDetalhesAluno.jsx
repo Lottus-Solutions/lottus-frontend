@@ -7,7 +7,7 @@ import { CardEditarAluno } from '../CardEditarAluno';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
-export function ModalDetalhesAluno({ onClose, matricula, turma, onExcluirAluno, atualizarAlunoNaLista }) {
+export function ModalDetalhesAluno({ onClose, matricula, turma, atualizarAlunoNaLista, onExclusaoFeito }) {
     const [confirmExcluir, setConfirmExcluir] = useState(false);
     const [historico, setHistorico] = useState([]);
     const [modalEditar, setModalEditar] = useState(false);
@@ -124,13 +124,14 @@ export function ModalDetalhesAluno({ onClose, matricula, turma, onExcluirAluno, 
 
             {confirmExcluir && (
                 <ConfirmExcluirAluno
+                    
                     onClose={() => setConfirmExcluir(false)}
                     onConfirm={async () => {
                         try {
                             await axios.delete(`/alunos/remover/${dadosAluno.matricula}`);
                             setConfirmExcluir(false);
                             onClose();
-                            if (onExcluirAluno) onExcluirAluno();
+                            onExclusaoFeito && onExclusaoFeito();
                         } catch (error) {
                             console.error("Erro ao remover aluno:", error);
                         }

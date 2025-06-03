@@ -77,22 +77,28 @@ export function Alunos() {
         setMostrarDetalhes(true);
     };
 
-    const aoExcluirAluno = () => {
-        setMostrarDetalhes(false);
-        setAlunoSelecionado(null);
-        buscarAlunos();
-        setAlertExcluir(true);
+    useEffect(() => {
+        if (alertExcluir) {
+            const timer = setTimeout(() => {
+                setAlertExcluir(false);
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [alertExcluir]);
 
-        setTimeout(() => {
-            setAlertExcluir(false);
-        }, 2000);
-    };
-
-    
 
 
     return (
         <div className="h-screen pt-16 pl-16">
+
+            {alertExcluir && (
+                            <AlertInform
+                                onClose={() => setAlertExcluir(false)}
+                                titulo="Aluno removido do sistema."
+                                descricao="Caso queira adiciona-lo novamente é necessário fazer outro cadastro."
+                            />
+                        )}
+
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-4">Alunos</h2>
             <p className="text-base text-[#0292B7] mb-10">{nomeTurma}</p>
@@ -119,6 +125,10 @@ export function Alunos() {
                             livrosTotais={4}
                             bonus={aluno.qtdBonus}
                             livroAtual={aluno.livroAtual}
+                            onExclusaoFeito={() => {
+                                            setAlertExcluir(true);
+                                            buscarAlunos();
+                                        }}
                         />
                     </div>
                 ))}

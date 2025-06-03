@@ -8,10 +8,14 @@ import { ModalAdicionarLivro } from "../../components/Modals/ModalAdicionarLivro
 import { ModalCategorias } from "../../components/Modals/ModalCategorias";
 import axios from "../../configs/axiosConfig";
 import { CatalogoListItemSkeleton } from "../../components/Skelletons/CatalogoListItemSkeleton";
+import { AlertSucesso } from "../../components/Alerts/AlertSucesso";
 
 export function Catalogo() {
     const [livros, setLivros] = useState([]);
     const [categorias, setCategorias] = useState([]);
+    const [mostrarAlertaEmprestimo, setMostrarAlertaEmprestimo] = useState(false);
+    const [mostrarAlertaLivro, setMostrarAlertaLivro] = useState(false);
+
 
     const [busca, setBusca] = useState("");
     const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
@@ -54,6 +58,24 @@ export function Catalogo() {
             buscarLivros(paginaAtual);
         }
     }, [busca, categoriaSelecionada, statusSelecionado, paginaAtual]);
+    useEffect(() => {
+        if (mostrarAlertaEmprestimo) {
+            const timer = setTimeout(() => {
+                setMostrarAlertaEmprestimo(false);
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [mostrarAlertaEmprestimo]);
+
+    useEffect(() => {
+        if (mostrarAlertaLivro) {
+            const timer = setTimeout(() => {
+                setMostrarAlertaLivro(false);
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [mostrarAlertaLivro]);
+
 
     function buscarLivros(pagina = 0) {
         setCarregando(true);
@@ -99,6 +121,21 @@ export function Catalogo() {
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Catálogo</h2>
 
+            {mostrarAlertaEmprestimo && (
+                <AlertSucesso
+                    onClose={() => setAlert(false)}
+                    titulo="Novo empréstimo adicionado."
+                    descricao="O empréstimo está cadastrado."
+                />
+            )}
+
+            {mostrarAlertaLivro && (
+                <AlertSucesso
+                    onClose={() => setMostrarAlertaLivro(false)}
+                    titulo="Novo livro adicionado."
+                    descricao="O livro agora faz parte do acervo da biblioteca e já pode ser consultado no catálogo."
+                />
+            )}
             <div className="flex justify-between w-9/10">
                 <Search
                     placeholder="Busque por livro, autor ou ID"
@@ -180,6 +217,10 @@ export function Catalogo() {
                                         qtdEmprestimos={livro.qtdEmprestimos || 0}
                                         qtdLivros={livro.quantidade}
                                         status={livro.status?.toLowerCase() || "disponível"}
+                                        onEmprestimoFeito={() => {
+                                            setMostrarAlertaEmprestimo(true);
+                                            buscarLivros(paginaAtual);
+                                        }}
                                     />
 
                                 );
@@ -220,6 +261,7 @@ export function Catalogo() {
                 <ModalAdicionarLivro
                     onClose={() => setModalAdicionarLivro(false)}
                     atualizarLista={() => buscarLivros(paginaAtual)}
+                    onLivroAdicionado={() => setMostrarAlertaLivro(true)}
                 />
             )}
             {modalCategorias && (

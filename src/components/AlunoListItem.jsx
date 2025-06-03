@@ -47,6 +47,7 @@ export function AlunoListItem(props) {
                     onClose={() => setModalDetalhes(false)}
                     matricula={props.matricula}
                     turma={props.turma}
+                    onExclusaoFeito={props.onExclusaoFeito}
                 />
             )}
         </div>

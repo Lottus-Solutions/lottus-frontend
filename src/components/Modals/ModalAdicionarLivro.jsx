@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { BotaoPrincipal } from "../botoes/BotaoPrincipal";
 import { motion } from 'framer-motion';
 import axios from "../../configs/axiosConfig";
-import { AlertSucesso } from "../Alerts/AlertSucesso";
+
 
 export function ModalAdicionarLivro(props) {
     const [isbn, setIsbn] = useState("");
@@ -13,7 +13,8 @@ export function ModalAdicionarLivro(props) {
     const [categorias, setCategorias] = useState([]);
     const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
     const [quantidade, setQuantidade] = useState("");
-    const [alert, setAlert] = useState(false);
+
+
 
     const debounceRef = useRef(null);
 
@@ -71,25 +72,16 @@ export function ModalAdicionarLivro(props) {
 
         axios.post("/livros", novoLivro)
             .then(() => {
-                setAlert(true);
-                setTimeout(() => {
-                    setAlert(false);
-                    props.onClose();
-                    if (props.atualizarLista) props.atualizarLista();
-                }, 1000);
+                if (props.onLivroAdicionado) props.onLivroAdicionado(); // ativa o alerta no Catalogo
+                props.onClose(); // fecha o modal
+                if (props.atualizarLista) props.atualizarLista();
             })
             .catch(error => console.error("Erro ao adicionar livro:", error));
     };
 
     return (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-            {alert && (
-                <AlertSucesso
-                    onClose={() => setAlert(false)}
-                    titulo="Novo livro adicionado."
-                    descricao="O livro agora faz parte do acervo da biblioteca e já pode ser consultado no catálogo."
-                />
-            )}
+
 
             <motion.div
                 initial={{ opacity: 0, y: -20 }}

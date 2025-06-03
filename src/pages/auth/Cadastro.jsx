@@ -77,7 +77,7 @@ export function Cadastro() {
             <div className="flex items-center gap-3">
               <div>
                 <p className="font-semibold text-base">Cadastro realizado com sucesso!</p>
-                <p className="text-sm">Você será redirecionado para a pagina de login.</p>
+                <p className="text-sm">Você será redirecionado para a página de login.</p>
               </div>
             </div>
           </motion.div>
