@@ -10,7 +10,7 @@ import { VLibrasWidget } from "./components/SiteComponents/VLibrasWidget";
 export function Site() {
   return (
     <div className="bg-[#F0F6F9] max-w-screen h-full">
-      <VLibrasWidget /> {/* Integra VLibras */}
+      
       <Header />
       <SessaoHome />
       <SessaoSobre />
