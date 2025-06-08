@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChartColumnStacked, ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { ChartColumnStacked, ChevronLeft, ChevronRight, Filter, Inbox } from "lucide-react";
 import { BotaoPrincipal } from "../../components/botoes/BotaoPrincipal";
 import { CatalogoListItem } from "../../components/CatalogoListItem";
 import { Perfil } from "../../components/Perfil";
@@ -129,12 +129,12 @@ export function Catalogo() {
     return (
         <div className="h-screen pt-16 pl-16 relative">
             {alertExcluir && (
-                            <AlertInform
-                                onClose={() => setAlertExcluir(false)}
-                                titulo="Livro removido do sistema."
-                                descricao="Caso queira adiciona-lo novamente é necessário fazer outro cadastro."
-                            />
-                        )}
+                <AlertInform
+                    onClose={() => setAlertExcluir(false)}
+                    titulo="Livro removido do sistema."
+                    descricao="Caso queira adiciona-lo novamente é necessário fazer outro cadastro."
+                />
+            )}
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Catálogo</h2>
 
@@ -193,7 +193,7 @@ export function Catalogo() {
                             }}
                         >
                             <option value="">Status</option>
-                            <option value="RESERVADO">Reservado</option>
+                            <option value="RESERVADO">Isndisponível</option>
                             <option value="DISPONIVEL">Disponível</option>
                         </select>
                         <Filter className="absolute top-1/2 right-3 -translate-y-1/2 text-[#727272]" size={14} />
@@ -231,8 +231,8 @@ export function Catalogo() {
                                         autor={livro.autor}
                                         categoria={livro.categoria}
                                         cor={categoriaObj?.cor || "#B0B0B0"}
-                                        qtdEmprestimos={livro.qtdEmprestimos || 0}
                                         qtdLivros={livro.quantidade}
+                                        qtdDisponivel={livro.quantidadeDisponivel}
                                         status={livro.status?.toLowerCase() || "disponível"}
                                         onEmprestimoFeito={() => {
                                             setMostrarAlertaEmprestimo(true);
@@ -247,7 +247,22 @@ export function Catalogo() {
                                 );
                             })
                         ) : (
-                            <div className="text-center text-sm text-gray-500">Nenhum livro encontrado.</div>
+                            <div className="flex flex-col items-center justify-center h-full gap-3 mb-20">
+                                <Inbox className="w-8 h-8 text-[#0292B7]" />
+                                <div className="flex flex-col items-center gap-1">
+                                    {busca.trim() !== "" ? (
+                                        <>
+                                            <p className="text-base">Livro não encontrado!</p>
+                                            <p className="text-[#727272]">Nenhum resultado corresponde à sua busca.</p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <p className="text-base">Acervo vazio!</p>
+                                            <p className="text-[#727272]">Nenhum livro cadastrado na biblioteca ainda.</p>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
                         )}
                     </>
                 )}

@@ -58,6 +58,10 @@ export function EmprestimoListItem(props) {
                     <p className="text-[#727272] text-xs">Aluno</p>
                     <p className="text-xs">{props.aluno}</p>
                 </div>
+                <div className="flex flex-col gap-3 w-28 ml-5">
+                    <p className="text-[#727272] text-xs">Turma</p>
+                    <p className="text-xs">{props.turma}</p>
+                </div>
                 <div className="flex flex-col gap-3 w-64">
                     <p className="text-[#727272] text-xs">Livro</p>
                     <p className="text-xs">{props.livro}</p>

@@ -24,7 +24,7 @@ export function Emprestimos() {
             }
 
             debounceRef.current = setTimeout(() => {
-                buscarEmprestimos(0); // Reseta para a primeira página na busca
+                buscarEmprestimos(0);
             }, 500);
 
             return () => {
@@ -74,9 +74,7 @@ export function Emprestimos() {
                 <Search
                     placeholder="Busque por aluno ou livro"
                     value={busca}
-                    onChange={(e) => {
-                        setBusca(e.target.value);
-                    }}
+                    onChange={(e) => setBusca(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
                             if (debounceRef.current) {
@@ -97,13 +95,21 @@ export function Emprestimos() {
                 </div>
             </div>
             <div className="mt-12 w-9/10 h-7/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-
                 {emprestimos.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full gap-3 mb-20">
                         <Inbox className="w-8 h-8 text-[#0292B7]" />
                         <div className="flex flex-col items-center gap-1">
-                            <p className="text-base">Nenhum empréstimo ativo!</p>
-                            <p className="text-[#727272]">Nenhum empréstimo em andamento foi localizado.</p>
+                            {busca.trim() !== "" ? (
+                                <>
+                                    <p className="text-base">Empréstimo não encontrado!</p>
+                                    <p className="text-[#727272]">Nenhum resultado corresponde à sua busca.</p>
+                                </>
+                            ) : (
+                                <>
+                                    <p className="text-base">Nenhum empréstimo ativo!</p>
+                                    <p className="text-[#727272]">Nenhum empréstimo em andamento foi localizado.</p>
+                                </>
+                            )}
                         </div>
                     </div>
                 ) : (
@@ -112,6 +118,7 @@ export function Emprestimos() {
                             key={index}
                             id={emprestimo.id}
                             aluno={emprestimo.nomeAluno}
+                            turma={emprestimo.turmaAluno}
                             livro={emprestimo.nomeLivro}
                             dataDevolucao={emprestimo.dataDevolucaoPrevista}
                             diasAtraso={emprestimo.diasAtrasados}
@@ -119,6 +126,7 @@ export function Emprestimos() {
                         />
                     ))
                 )}
+
                 {!carregando && emprestimos.length > 0 && (
                     <div className="flex justify-end items-center gap-6 mt-4">
                         <button
@@ -140,9 +148,7 @@ export function Emprestimos() {
                         </button>
                     </div>
                 )}
-
             </div>
-
         </div>
     );
 }

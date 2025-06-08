@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Upload, X, File, Loader2 } from "lucide-react";
-import { BotaoPrincipal } from "../botoes/BotaoPrincipal";
+import { BotaoBranco } from "../botoes/BotaoBranco";
 import { motion } from 'framer-motion';
 
 export function ModalUpload(props) {
@@ -37,10 +37,10 @@ export function ModalUpload(props) {
       return;
     }
 
-    if (finalidadeSelecionada === "alunos" && !acaoAlunos) {
-      setError("Selecione a ação para os alunos (Adicionar ou Sobrescrever).");
-      return;
-    }
+    // if (finalidadeSelecionada === "alunos" && !acaoAlunos) {
+    //   setError("Selecione a ação para os alunos (Adicionar ou Sobrescrever).");
+    //   return;
+    // }
 
     if (!arquivoSelecionado) {
       setError("Selecione um arquivo antes de fazer o upload.");
@@ -53,9 +53,9 @@ export function ModalUpload(props) {
     const formData = new FormData();
     formData.append("arquivo", arquivoSelecionado);
     formData.append("finalidade", finalidadeSelecionada);
-    if (finalidadeSelecionada === "alunos") {
-      formData.append("acao", acaoAlunos);
-    }
+    // if (finalidadeSelecionada === "alunos") {
+    //   formData.append("acao", acaoAlunos);
+    // }
 
     try {
       const response = await fetch("http://127.0.0.1:5000/upload", {
@@ -72,7 +72,7 @@ export function ModalUpload(props) {
         setError(data.erro || "Erro ao enviar arquivo.");
       } else {
         setMensagemSucesso(data.mensagem || "Upload realizado com sucesso!");
-        setArquivoSelecionado(null); // limpa o arquivo após upload
+        setArquivoSelecionado(null);
       }
     } catch (err) {
       setError("Erro ao conectar com o servidor.");
@@ -81,6 +81,36 @@ export function ModalUpload(props) {
       setIsLoading(false);
     }
   };
+
+  const handleDownloadTemplate = () => {
+    if (!finalidadeSelecionada) {
+      setError("Selecione a finalidade antes de baixar o template.");
+      return;
+    }
+
+    let fileName = "";
+    let filePath = "";
+
+    if (finalidadeSelecionada === "alunos") {
+      fileName = "Template - Alunos.xlsx";
+      filePath = "/templates/Template - Alunos.xlsx";
+    } else if (finalidadeSelecionada === "livros") {
+      fileName = "Template - Livros.xlsx";
+      filePath = "/templates/Template - Livros.xlsx";
+    } else {
+      setError("Finalidade inválida.");
+      return;
+    }
+
+    const link = document.createElement("a");
+    link.href = filePath;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -126,13 +156,16 @@ export function ModalUpload(props) {
                 onChange={(e) => {
                   setFinalidadeSelecionada(e.target.value);
                   setAcaoAlunos("");
+                  setError("");
+                  setMensagemSucesso("");
                 }}
+
               />
               <span className="text-[#727272] text-sm">Catálogo</span>
             </label>
           </div>
 
-          {finalidadeSelecionada === "alunos" && (
+          {/* {finalidadeSelecionada === "alunos" && (
             <div className="mt-2 flex flex-col gap-2">
               <p className="text-sm text-zinc-600">Ação desejada:</p>
               <label className="flex items-center gap-2">
@@ -156,7 +189,7 @@ export function ModalUpload(props) {
                 <span className="text-xs text-zinc-600">Sobrescrever alunos existentes</span>
               </label>
             </div>
-          )}
+          )} */}
 
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-500 px-4 py-2 rounded w-full text-sm mt-3">
@@ -203,7 +236,8 @@ export function ModalUpload(props) {
           )}
 
           <div className="flex gap-4 w-full justify-center mt-5">
-            <BotaoPrincipal nome="Baixar Template" />
+            <BotaoBranco nome="Baixar Template" onClick={handleDownloadTemplate} />
+
             <button
               onClick={handleUpload}
               disabled={isLoading}

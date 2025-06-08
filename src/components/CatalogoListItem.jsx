@@ -37,9 +37,9 @@ export function CatalogoListItem(props) {
             <div className="flex flex-col gap-3 w-40">
                 <p className="text-[#727272] text-xs">Status</p>
                 {props.status === "disponivel" ? (
-                    <StatusItem status="disponivel" qtdLivros={props.qtdLivros} qtdEmprestimos={props.qtdEmprestimos} />
+                    <StatusItem status="disponivel" qtdLivros={props.qtdLivros} qtdDisponivel={props.qtdDisponivel} />
                 ) : (
-                    <StatusItem status="reservado" qtdLivros={props.qtdLivros} qtdEmprestimos={props.qtdEmprestimos} />
+                    <StatusItem status="reservado" qtdLivros={props.qtdLivros} qtdDisponivel={props.qtdDisponivel} />
                 )}
             </div>
             <div className="flex items-center gap-5 mr-5 mt-5">

@@ -3,6 +3,7 @@ import { BotaoPrincipal } from "../botoes/BotaoPrincipal";
 import { motion } from 'framer-motion';
 import { useEffect, useState } from "react";
 import axios from "../../configs/axiosConfig";
+import { useParams, useLocation } from "react-router-dom";
 import { AlertSucesso } from "../Alerts/AlertSucesso";
 
 export function ModalAdicionarAluno(props) {
@@ -11,21 +12,28 @@ export function ModalAdicionarAluno(props) {
     const [turmaId, setTurmaId] = useState("");
     const [alert, setAlert] = useState(false);
 
+    const { id } = useParams();  // Pega o ID da turma da URL
+    const { state } = useLocation();  // Pega o nome da turma da state da URL
+    const nomeTurma = state?.nomeTurma || "Turma";  // Se houver nomeTurma no state, usa; caso contrário, usa "Turma"
+
     useEffect(() => {
         getTurmas();
     }, []);
-
 
     function getTurmas() {
         axios.get("/alunos/listar-turmas")
             .then(response => {
                 setTurmas(response.data);
+                if (id) {
+                    setTurmaId(id);
+                }
             })
             .catch(error => {
                 console.error("Erro ao buscar turmas:", error);
             });
     }
 
+    // Função para cadastrar o aluno
     function cadastrarAluno(e) {
         e.preventDefault();
 
@@ -36,20 +44,19 @@ export function ModalAdicionarAluno(props) {
 
         const novoAluno = {
             nome,
-            qtd_bonus: 0,
-            turma_id: Number(turmaId),
-            qtd_livros_lidos: 0
+            qtdBonus: 0,
+            turmaId: Number(turmaId),
+            qtdLivrosLidos: 0
         };
 
         axios.post("/alunos/cadastrar", novoAluno)
             .then(response => {
                 setAlert(true);
-
                 setTimeout(() => {
                     setAlert(false);
                     props.onClose();
                     if (props.atualizarLista) props.atualizarLista();
-                },1000); // Espera 2 segundos para mostrar o alerta
+                }, 1000);
             })
             .catch(error => {
                 console.error("Erro ao cadastrar aluno:", error);
@@ -65,7 +72,6 @@ export function ModalAdicionarAluno(props) {
                     titulo="Aluno cadastrado no sistema."
                     descricao="Agora você pode registrar seus empréstimos e analisar seu histórico de leituras."
                 />
-
             )}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}

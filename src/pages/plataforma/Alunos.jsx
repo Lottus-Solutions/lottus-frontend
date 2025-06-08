@@ -8,7 +8,7 @@ import { Search } from "../../components/Search";
 import { ModalAdicionarAluno } from "../../components/Modals/ModalAdicionarAluno";
 import { ModalDetalhesAluno } from "../../components/Modals/ModalDetalhesAluno";
 import { AlertInform } from '../../components/Alerts/AlertInform';
-import { a } from "framer-motion/client";
+import { Inbox } from "lucide-react";  // <-- IMPORTAÇÃO DO ÍCONE
 
 export function Alunos() {
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
@@ -50,7 +50,7 @@ export function Alunos() {
         } else {
             buscarAlunos();
         }
-    }, [termoBusca, id, alunos]);
+    }, [termoBusca, id]);
 
     const buscarAlunos = () => {
         axios.get(`/alunos/turma/${id}`)
@@ -86,18 +86,16 @@ export function Alunos() {
         }
     }, [alertExcluir]);
 
-
-
     return (
         <div className="h-screen pt-16 pl-16">
 
             {alertExcluir && (
-                            <AlertInform
-                                onClose={() => setAlertExcluir(false)}
-                                titulo="Aluno removido do sistema."
-                                descricao="Caso queira adiciona-lo novamente é necessário fazer outro cadastro."
-                            />
-                        )}
+                <AlertInform
+                    onClose={() => setAlertExcluir(false)}
+                    titulo="Aluno removido do sistema."
+                    descricao="Caso queira adiciona-lo novamente é necessário fazer outro cadastro."
+                />
+            )}
 
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-4">Alunos</h2>
@@ -115,23 +113,31 @@ export function Alunos() {
             </div>
 
             <div className="mt-12 w-9/10 h-7/10 flex flex-col gap-8 overflow-y-scroll pr-8 custom-scrollbar">
-                {alunos.map(aluno => (
-                    <div key={aluno.matricula} onClick={() => abrirDetalhes(aluno)}>
-                        <AlunoListItem
-                            turma={nomeTurma}
-                            matricula={aluno.matricula}
-                            nome={aluno.nome}
-                            livrosLidos={aluno.qtdLivrosLidos}
-                            livrosTotais={4}
-                            bonus={aluno.qtdBonus}
-                            livroAtual={aluno.livroAtual}
-                            onExclusaoFeito={() => {
-                                            setAlertExcluir(true);
-                                            buscarAlunos();
-                                        }}
-                        />
+                {alunos.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full gap-3 mb-20">
+                        <Inbox className="w-8 h-8 text-[#0292B7]" />
+                        <p className="text-base">Aluno não encontrado!</p>
+                        <p className="text-[#727272]">Nenhum resultado corresponde à sua busca.</p>
                     </div>
-                ))}
+                ) : (
+                    alunos.map(aluno => (
+                        <div key={aluno.matricula} onClick={() => abrirDetalhes(aluno)}>
+                            <AlunoListItem
+                                turma={nomeTurma}
+                                matricula={aluno.matricula}
+                                nome={aluno.nome}
+                                livrosLidos={aluno.qtdLivrosLidos}
+                                livrosTotais={4}
+                                bonus={aluno.qtdBonus}
+                                livroAtual={aluno.livroAtual}
+                                onExclusaoFeito={() => {
+                                    setAlertExcluir(true);
+                                    buscarAlunos();
+                                }}
+                            />
+                        </div>
+                    ))
+                )}
             </div>
 
             {mostrarModalAdicionar && (
@@ -141,8 +147,6 @@ export function Alunos() {
                 />
             )}
 
-
-            
         </div>
     );
 }
