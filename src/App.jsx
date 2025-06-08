@@ -13,12 +13,11 @@ import { Alunos } from "./pages/plataforma/Alunos";
 
 const autenticacao = () => {
   const token = localStorage.getItem('token');
-  // if (token) {
-  //   return true;
-  // } else {
-  //   return false;
-  // }
-  return true;
+  if (token) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 function LayoutPrivado() {

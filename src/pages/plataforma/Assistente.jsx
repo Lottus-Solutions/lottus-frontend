@@ -4,7 +4,7 @@ import { SugestaoPerguntas } from "../../components/sugestaoPerguntas";
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "../../configs/axiosConfig.js";
-import ReactMarkdown from 'react-markdown';
+import { MarkdownText } from "../../components/MarkdownText.jsx";
 
 
 export function Assistente() {
@@ -46,17 +46,17 @@ export function Assistente() {
   ];
 
   const perguntasLivros = [
-    "Quais livros do acervo nunca foram emprestados?",
+    "Quais livros do acervo estão reservados?",
     "Quais livros foram mais lidos por cada turma?",
     "Quais livros estão com maior demanda neste semestre?",
-    "Quando foi feita a última atualização do catálogo?",
+    "Quantos livros temos no acervo?",
   ];
 
   const perguntasAlunos = [
     "Quantos alunos de cada turma ainda não retiraram os livros obrigatórios?",
     "Quais alunos têm histórico de atrasos frequentes?",
     "Qual a quantidade de bônus que os alunos têm, dividida por turma?",
-    "Quando foi feita a última atualização do catálogo?",
+    "Quais alunos estão com livros em atraso?",
   ];
 
   const perguntasCategorias = [
@@ -149,7 +149,7 @@ export function Assistente() {
                       }`}
                   >
                     {mensagem.tipo === "resposta" ? (
-                      <ReactMarkdown>{mensagem.texto}</ReactMarkdown>
+                      <MarkdownText>{mensagem.texto}</MarkdownText>
                     ) : (
                       mensagem.texto
                     )}
