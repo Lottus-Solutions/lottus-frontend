@@ -13,7 +13,9 @@ export function ModalDetalhesAluno({ onClose, matricula, turma, atualizarAlunoNa
     const [modalEditar, setModalEditar] = useState(false);
     const [dadosAluno, setDadosAluno] = useState(null); // Será preenchido após o GET
     const [refresh, setRefresh] = useState(false);
+    const [perfil, setPerfil] = useState(null);
 
+    
     // Buscar os dados completos do aluno pela matrícula
     useEffect(() => {
         async function fetchAluno() {
@@ -27,7 +29,7 @@ export function ModalDetalhesAluno({ onClose, matricula, turma, atualizarAlunoNa
         }
 
         fetchAluno();
-    }, [ matricula, refresh ]);
+    }, [matricula, refresh]);
 
     // Buscar o histórico de leitura
     useEffect(() => {
@@ -43,6 +45,20 @@ export function ModalDetalhesAluno({ onClose, matricula, turma, atualizarAlunoNa
 
         fetchHistorico();
     }, [dadosAluno]);
+
+    useEffect(() => {
+        async function fetchPerfilAluno() {
+            if (!matricula) return;
+            try {
+                const response = await axios.get(`/alunos/perfil/${matricula}`);
+                setPerfil(response.data);
+            } catch (error) {
+                console.error("Erro ao buscar perfil do aluno:", error);
+            }
+        }
+
+        fetchPerfilAluno();
+    }, [matricula, refresh]);
 
     if (!dadosAluno) return null;
 
@@ -88,7 +104,11 @@ export function ModalDetalhesAluno({ onClose, matricula, turma, atualizarAlunoNa
 
                     <div className="flex flex-col gap-3">
                         <p>Livro Atual</p>
-                        <CardLivroAtual />
+                        <CardLivroAtual
+                            livro={perfil?.livro}
+                            dataDevolucao={perfil?.dataDevolucao}
+                            isAtrasado={perfil?.atualIsAtrasado}
+                        />
                     </div>
 
                     <div className="absolute bottom-10 flex gap-4">
@@ -124,7 +144,7 @@ export function ModalDetalhesAluno({ onClose, matricula, turma, atualizarAlunoNa
 
             {confirmExcluir && (
                 <ConfirmExcluirAluno
-                    
+
                     onClose={() => setConfirmExcluir(false)}
                     onConfirm={async () => {
                         try {
@@ -147,7 +167,7 @@ export function ModalDetalhesAluno({ onClose, matricula, turma, atualizarAlunoNa
                         if (atualizarAlunoNaLista) atualizarAlunoNaLista(alunoAtualizado);
                         setDadosAluno(alunoAtualizado);
                         setModalEditar(false);
-                        setRefresh(prev => !prev); 
+                        setRefresh(prev => !prev);
                     }}
                 />
             )}

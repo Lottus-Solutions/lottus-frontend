@@ -9,12 +9,14 @@ import { ModalCategorias } from "../../components/Modals/ModalCategorias";
 import axios from "../../configs/axiosConfig";
 import { CatalogoListItemSkeleton } from "../../components/Skelletons/CatalogoListItemSkeleton";
 import { AlertSucesso } from "../../components/Alerts/AlertSucesso";
+import { AlertInform } from '../../components/Alerts/AlertInform';
 
 export function Catalogo() {
     const [livros, setLivros] = useState([]);
     const [categorias, setCategorias] = useState([]);
     const [mostrarAlertaEmprestimo, setMostrarAlertaEmprestimo] = useState(false);
     const [mostrarAlertaLivro, setMostrarAlertaLivro] = useState(false);
+    const [alertExcluir, setAlertExcluir] = useState(false);
 
 
     const [busca, setBusca] = useState("");
@@ -115,9 +117,24 @@ export function Catalogo() {
                 console.error("Erro ao buscar categorias:", error);
             });
     }
+    useEffect(() => {
+        if (alertExcluir) {
+            const timer = setTimeout(() => {
+                setAlertExcluir(false);
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [alertExcluir]);
 
     return (
         <div className="h-screen pt-16 pl-16 relative">
+            {alertExcluir && (
+                            <AlertInform
+                                onClose={() => setAlertExcluir(false)}
+                                titulo="Livro removido do sistema."
+                                descricao="Caso queira adiciona-lo novamente é necessário fazer outro cadastro."
+                            />
+                        )}
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Catálogo</h2>
 
@@ -219,6 +236,10 @@ export function Catalogo() {
                                         status={livro.status?.toLowerCase() || "disponível"}
                                         onEmprestimoFeito={() => {
                                             setMostrarAlertaEmprestimo(true);
+                                            buscarLivros(paginaAtual);
+                                        }}
+                                        onExclusaoFeito={() => {
+                                            setAlertExcluir(true);
                                             buscarLivros(paginaAtual);
                                         }}
                                     />

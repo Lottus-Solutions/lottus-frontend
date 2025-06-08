@@ -61,7 +61,6 @@ export function ModalAdicionarEmprestimo(props) {
     }
 
     function realizarEmprestimo() {
-        console.log(alunoSelecionado)
         if (!alunoSelecionado || !props.livroId) {
             setError("Selecione um aluno antes de realizar o empréstimo.");
             return;

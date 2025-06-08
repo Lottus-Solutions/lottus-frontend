@@ -14,6 +14,7 @@ export function AlunoListItem(props) {
         livroAtual: props.livroAtual,
         matricula: props.matricula,
     });
+    
 
     const atualizarAluno = (novoAluno) => {
         setAlunoData(prev => ({ ...prev, ...novoAluno }));

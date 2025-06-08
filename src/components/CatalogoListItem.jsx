@@ -63,6 +63,7 @@ export function CatalogoListItem(props) {
                     quantidade={props.qtdLivros}
                     reservados={props.qtdEmprestimos}
                     descricao={props.descricao}
+                    onExclusaoFeito={props.onExclusaoFeito}
                 />
             )}
 

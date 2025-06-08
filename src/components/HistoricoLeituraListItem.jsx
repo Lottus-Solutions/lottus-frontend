@@ -13,12 +13,20 @@ export function HistoricoLeituraListItem({ item }) {
             </div>
             <div className="flex flex-col gap-3 w-24">
                 <p className="text-[#727272] text-xs">Data de Retirada</p>
-                <p className="text-xs">{new Date(dataEmprestimo).toLocaleDateString()}</p>
+                <p className="text-xs">
+                    {dataEmprestimo ? dataEmprestimo.split('T')[0].split('-').reverse().join('/') : '-'}
+                </p>
             </div>
+
             <div className="flex flex-col gap-3 w-28">
                 <p className="text-[#727272] text-xs">Data de Devolução</p>
-                <p className="text-xs">{dataDevolucaoPrevista ? new Date(dataDevolucaoPrevista).toLocaleDateString() : '-'}</p>
+                <p className="text-xs">
+                    {dataDevolucaoPrevista
+                        ? dataDevolucaoPrevista.split('T')[0].split('-').reverse().join('/')
+                        : '-'}
+                </p>
             </div>
+
         </div>
     );
 }

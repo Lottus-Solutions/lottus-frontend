@@ -7,7 +7,7 @@ import { ModalEditarLivro } from './ModalEditarLivro';
 import axios from "../../configs/axiosConfig";
 import { AlertSucesso } from '../Alerts/AlertSucesso';
 
-export function ModalDetalhesLivro(props) {
+export function ModalDetalhesLivro(props, onClose, onExclusaoFeito) {
     const [confirmExcluir, setConfirmExcluir] = useState(false);
     const [ModalEditarLivroOpen, setModalEditarOpen] = useState(false);
     const [leitores, setLeitores] = useState([]);
@@ -50,15 +50,8 @@ export function ModalDetalhesLivro(props) {
         carregarLeitores();
     }, [props.id]);
 
-    async function excluirLivro() {
-        try {
-            await axios.delete(`/livros/${detalhesLivro.id}`);
-            setConfirmExcluir(false);
-            setExibirAlerta(true);
-        } catch (error) {
-            console.error("Erro ao excluir o livro:", error);
-        }
-    }
+
+
 
     return (
         <>
@@ -137,7 +130,17 @@ export function ModalDetalhesLivro(props) {
                 {confirmExcluir && (
                     <ConfirmExcluirLivro
                         onClose={() => setConfirmExcluir(false)}
-                        onConfirm={excluirLivro}
+                        onConfirm={async () => {
+                            try {
+                                await axios.delete(`/livros/${detalhesLivro.id}`);
+                                setConfirmExcluir(false);
+                                props.onClose();
+                                props.onExclusaoFeito && props.onExclusaoFeito();
+                            } catch (error) {
+                                console.error("Erro ao excluir livro:", error);
+                            }
+
+                        }}
                     />
                 )}
 

@@ -6,7 +6,9 @@ export function ConfirmExcluirCategoria({ onClose, onConfirm }) {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
-            className="bg-white p-6 rounded-2xl shadow-lg mt-5 absolute top-0 left-4/10 w-[400px] h-64 flex flex-col justify-between gap-3"
+            className="fixed top-10 left-1/2 transform -translate-x-1/2
+                       bg-white p-6 rounded-2xl shadow-lg w-[400px] h-64 
+                       flex flex-col justify-between gap-3 z-50"
         >
             <img src="/images/remover.svg" alt="Excluir" className="w-12" />
             <div className="flex flex-col gap-2">

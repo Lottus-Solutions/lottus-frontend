@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import  axios from "../configs/axiosConfig.js";
+import axios from "../configs/axiosConfig.js";
 import { ModalEditarPerfil } from "./Modals/ModalEditarPerfil.jsx";
 import { ModalUpload } from "./Modals/ModalUpload.jsx";
 
 export function Perfil() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [nomeUsuario, setNomeUsuario] = useState(""); 
+    const [nomeUsuario, setNomeUsuario] = useState("");
     const [emailUsuario, setEmailUsuario] = useState("");
     const [editarPerfilOpen, setEditarPerfilOpen] = useState(false);
     const [uploadOpen, setUploadOpen] = useState(false);
+    const [avatar, setAvatar] = useState(1);
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -21,6 +22,7 @@ export function Perfil() {
             .then(response => {
                 setNomeUsuario(response.data.nome);
                 setEmailUsuario(response.data.email);
+                setAvatar(response.data.idAvatar || 1);
             })
             .catch(error => {
                 console.error("Erro ao obter dados do usuário:", error);
@@ -28,14 +30,14 @@ export function Perfil() {
     }
 
     useEffect(() => {
-        getDadosUsuario(); 
+        getDadosUsuario();
     }, []);
 
     return (
         <div className="absolute top-14 right-14">
             <img
-                src="/images/user.svg"
-                alt="Icone de usuario"
+                src={avatar === 2 ? "/images/male-user.svg" : "/images/user.svg"}
+                alt="Ícone de usuário"
                 className="w-10 h-10 rounded-full shadow cursor-pointer hover:scale-103 transition-transform"
                 onClick={toggleDropdown}
             />
@@ -65,8 +67,17 @@ export function Perfil() {
                 )}
             </AnimatePresence>
 
-            {editarPerfilOpen && (<ModalEditarPerfil onClose={() => setEditarPerfilOpen(false)}/>)}
-            {uploadOpen && (<ModalUpload onClose={() => setUploadOpen(false)}/>)}
+            {editarPerfilOpen && (
+                <ModalEditarPerfil
+                    onClose={() => setEditarPerfilOpen(false)}
+                    onPerfilAtualizado={(novoNome, novoEmail, novoAvatar) => {
+                        setNomeUsuario(novoNome);
+                        setEmailUsuario(novoEmail);
+                        setAvatar(novoAvatar);
+                    }}
+                />
+            )}
+            {uploadOpen && (<ModalUpload onClose={() => setUploadOpen(false)} />)}
         </div>
     );
 }

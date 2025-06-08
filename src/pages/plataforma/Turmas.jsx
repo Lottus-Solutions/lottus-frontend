@@ -14,7 +14,7 @@ export function Turmas() {
             axios.get("/alunos/listar-turmas")
                 .then(response => {
                     setTurmas(response.data);
-                    console.log(response.data);
+                    
                 })
                 .catch(error => {
                     console.error("Erro ao buscar turmas:", error);

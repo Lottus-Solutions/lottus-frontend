@@ -15,6 +15,7 @@ export function ModalCategorias(props) {
         axios.get("/categorias")
             .then((response) => {
                 setCategorias(response.data);
+                
             })
             .catch((error) => {
                 console.error("Erro ao buscar categorias:", error);
@@ -56,6 +57,7 @@ export function ModalCategorias(props) {
                                 descricao={categoria.descricao}
                                 categoriaCor={categoria.cor}
                                 onCategoriasAtualizadas={buscarCategorias}
+                                qtdLivrosCadastrados={categoria.qtdLivrosCadastrados}
                             />
 
                         ))}

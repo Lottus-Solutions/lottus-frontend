@@ -30,7 +30,7 @@ export function CategoriaListItem(props) {
                 </div>
                 <div className="flex flex-col gap-3 w-32">
                     <p className="text-[#727272] text-xs">Livros Cadastrados</p>
-                    <p className="text-xs">0</p>
+                    <p className="text-xs">{props.qtdLivrosCadastrados}</p>
                 </div>
                 <div className="flex gap-5 mr-5 items-center">
                     <img

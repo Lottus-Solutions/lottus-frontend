@@ -142,13 +142,7 @@ export function Alunos() {
             )}
 
 
-            {alertExcluir && (
-                <AlertInform
-                    onClose={() => setAlertExcluir(false)}
-                    titulo="Aluno excluído com sucesso"
-                    descricao="O registro do aluno não está mais ativo no sistema."
-                />
-            )}
+            
         </div>
     );
 }
