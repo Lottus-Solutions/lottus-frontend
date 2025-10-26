@@ -222,15 +222,17 @@ export function Catalogo() {
                     <>
                         {Array.isArray(livros) && livros.length > 0 ? (
                             livros.map(livro => {
-                                const categoriaObj = categorias.find(c => c.nome === livro.categoria);
+                                const categoriaNome = livro.categoria ? livro.categoria.nome : "Sem categoria";
+                                const cor = livro.categoria ? livro.categoria.cor : "#B0B0B0";
+
                                 return (
                                     <CatalogoListItem
                                         key={livro.id}
                                         id={livro.id}
                                         livro={livro.nome}
                                         autor={livro.autor}
-                                        categoria={livro.categoria}
-                                        cor={categoriaObj?.cor || "#B0B0B0"}
+                                        categoria={categoriaNome}
+                                        cor={cor}
                                         qtdLivros={livro.quantidade}
                                         qtdDisponivel={livro.quantidadeDisponivel}
                                         status={livro.status?.toLowerCase() || "disponível"}
@@ -243,7 +245,6 @@ export function Catalogo() {
                                             buscarLivros(paginaAtual);
                                         }}
                                     />
-
                                 );
                             })
                         ) : (

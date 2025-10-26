@@ -76,7 +76,7 @@ export function ModalDetalhesLivro(props, onClose, onExclusaoFeito) {
                         </div>
 
                         <div className="bg-[#0292B7] w-fit px-7 py-1 rounded-full flex items-center justify-center">
-                            <p className="text-sm text-white">{detalhesLivro.categoria}</p>
+                            <p className="text-sm text-white">{detalhesLivro.categoria.nome}</p>
                         </div>
 
                         <div className="flex flex-col gap-2">

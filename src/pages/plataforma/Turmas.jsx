@@ -32,7 +32,7 @@ export function Turmas() {
                         <CardTurma
                             key={index}
                             id={turma.id}
-                            turma={turma.serie}
+                            turma={turma.nome}
                         />
                     ))}
                 </div>

@@ -41,7 +41,7 @@ export function Login() {
         email: emailTrim,
         senha: senhaTrim
       });
-
+      console.log(response.data.token);
       localStorage.setItem('token', response.data.token);
       setSuccess(true);
 

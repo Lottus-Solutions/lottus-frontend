@@ -69,7 +69,7 @@ export function ModalAdicionarEmprestimo(props) {
         const payload = {
 
             matriculaAluno: alunoSelecionado.matricula,
-            fk_livro: props.livroId,
+            livroId: props.livroId,
             dataEmprestimo: new Date().toISOString().split("T")[0]
         };
 
@@ -120,8 +120,8 @@ export function ModalAdicionarEmprestimo(props) {
                         className="border border-gray-300 rounded px-2 py-[5px] text-sm outline-0"
                     >
                         <option value="">Selecione uma turma</option>
-                        {turmas.map((turma) => (
-                            <option key={turma.id} value={turma.id}>{turma.serie}</option>
+                        {turmas.map((turma, index) => (
+                            <option key={`${turma.id}-${index}`} value={turma.id}>{turma.nome}</option>
                         ))}
                     </select>
 
