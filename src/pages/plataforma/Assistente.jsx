@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "../../configs/axiosConfig.js";
 import { MarkdownText } from "../../components/MarkdownText.jsx";
+import { Calendario } from "../../components/Calendario.jsx";
 
 
 export function Assistente() {
@@ -114,7 +115,10 @@ export function Assistente() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
+
+      <Calendario />
       <Perfil />
+
       <div className="flex flex-col items-center justify-center mt-10">
 
         {!chatAtivo && (
