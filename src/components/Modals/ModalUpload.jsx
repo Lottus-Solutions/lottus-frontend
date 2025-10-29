@@ -58,7 +58,7 @@ export function ModalUpload(props) {
     // }
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/upload", {
+      const response = await fetch("http://localhost:8080/upload", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
