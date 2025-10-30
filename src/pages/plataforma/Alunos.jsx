@@ -18,6 +18,12 @@ export function Alunos() {
     const [alunos, setAlunos] = useState([]);
     const [termoBusca, setTermoBusca] = useState("");
     const [alertExcluir, setAlertExcluir] = useState(false);
+    const [carregando, setCarregando] = useState(false);
+
+    // paginação
+    const [paginaAtual, setPaginaAtual] = useState(0);
+    const [totalPaginas, setTotalPaginas] = useState(1);
+    const tamanhoPagina = 5; // número de alunos por página
 
     const debounceRef = useRef(null);
 
