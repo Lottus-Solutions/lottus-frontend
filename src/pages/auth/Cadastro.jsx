@@ -42,8 +42,10 @@ export function Cadastro() {
 
     setError('');
 
+    const apiUrl = import.meta.env.VITE_API_URL;
+
     try {
-      const response = await axios.post('http://localhost:8080/auth/register', {
+      const response = await axios.post(`${apiUrl}/auth/register`, {
         nome,
         email,
         senha
@@ -54,7 +56,7 @@ export function Cadastro() {
         setTimeout(() => {
           setSuccess(false);
           navigate('/login');
-        }, 2000); 
+        }, 2000);
       }
     } catch (erro) {
       setError('Erro ao cadastrar. Tente novamente.');

@@ -57,8 +57,10 @@ export function ModalUpload(props) {
     //   formData.append("acao", acaoAlunos);
     // }
 
+    const uploadUrl = import.meta.env.VITE_UPLOAD_URL;
+
     try {
-      const response = await fetch("http://localhost:8080/upload", {
+      const response = await fetch(`${uploadUrl}/upload`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,

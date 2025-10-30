@@ -16,10 +16,12 @@ export function EmprestimoListItem(props) {
         setShowConfirm(true);
     };
 
+    apiUrl = import.meta.env.VITE_API_URL;
+
     const handleConfirm = () => {
         setShowConfirm(false);
         setLoadingFinalizar(true);
-        axios.post(`http://localhost:8080/emprestimos/${props.id}/finalizar`)
+        axios.post(`${apiUrl}/emprestimos/${props.id}/finalizar`)
             .then(() => {
                 setFinalizar(true);
                 if (props.atualizarLista) props.atualizarLista();
@@ -35,7 +37,7 @@ export function EmprestimoListItem(props) {
 
     const handleRenovarClick = () => {
         setLoadingRenovar(true);
-        axios.post(`http://localhost:8080/emprestimos/${props.id}/renovar`)
+        axios.post(`${apiUrl}/emprestimos/${props.id}/renovar`)
             .then(() => {
                 setRenovar(true);
                 if (props.atualizarLista) props.atualizarLista();

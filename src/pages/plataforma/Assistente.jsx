@@ -93,7 +93,9 @@ export function Assistente() {
     setInputValue("");
     setLoading(true); // Inicia loading
 
-    axios.post('http://127.0.0.1:5000/perguntar', { pergunta })
+    const iaUrl = import.meta.env.VITE_IA_URL;
+
+    axios.post(`${iaUrl}/perguntar`, { pergunta })
       .then(response => {
         const resposta = response.data.resposta;
         setChat(prev => [...prev, { tipo: 'resposta', texto: resposta }]);

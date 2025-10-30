@@ -10,6 +10,7 @@ import axios from "../../configs/axiosConfig";
 import { CatalogoListItemSkeleton } from "../../components/Skelletons/CatalogoListItemSkeleton";
 import { AlertSucesso } from "../../components/Alerts/AlertSucesso";
 import { AlertInform } from '../../components/Alerts/AlertInform';
+import { Calendario } from "../../components/Calendario";
 
 export function Catalogo() {
     const [livros, setLivros] = useState([]);
@@ -135,6 +136,7 @@ export function Catalogo() {
                     descricao="Caso queira adiciona-lo novamente é necessário fazer outro cadastro."
                 />
             )}
+            <Calendario />
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Catálogo</h2>
 

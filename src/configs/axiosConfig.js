@@ -2,10 +2,11 @@ import axios from 'axios';
 
 const getToken = () => localStorage.getItem('token');
 
-axios.defaults.baseURL = 'http://localhost:8080'; 
+const apiUrl = import.meta.env.VITE_API_URL;
+
+axios.defaults.baseURL = apiUrl;
 axios.defaults.headers.common['Authorization'] = getToken() ? `Bearer ${getToken()}` : '';
 
-// Interceptor de requisição para garantir que o token esteja sempre atualizado
 axios.interceptors.request.use(
   (config) => {
     const token = getToken();

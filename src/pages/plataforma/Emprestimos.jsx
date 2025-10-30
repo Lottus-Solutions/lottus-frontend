@@ -5,6 +5,7 @@ import { Search } from "../../components/Search";
 import { ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 import '../../index.css';
 import axios from "../../configs/axiosConfig";
+import { Calendario } from "../../components/Calendario";
 
 export function Emprestimos() {
     const [emprestimos, setEmprestimos] = useState([]);
@@ -68,6 +69,7 @@ export function Emprestimos() {
 
     return (
         <div className="h-screen pt-16 pl-16">
+            <Calendario />
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Empréstimos</h2>
             <div className="flex justify-between w-9/10">

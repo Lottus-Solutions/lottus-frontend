@@ -20,7 +20,6 @@ export function Login() {
   const fazerLogin = async (e) => {
     e.preventDefault();
 
-    // trim nos valores antes de validar e enviar
     const emailTrim = email.trim();
     const senhaTrim = senha.trim();
 
@@ -36,8 +35,10 @@ export function Login() {
 
     setError('');
 
+    const apiUrl = import.meta.env.VITE_API_URL;
+
     try {
-      const response = await axios.post('http://localhost:8080/auth/login', {
+      const response = await axios.post(`${apiUrl}/auth/login`, {
         email: emailTrim,
         senha: senhaTrim
       });

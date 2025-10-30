@@ -3,6 +3,7 @@ import { CardTurma } from "../../components/CardTurma";
 import { Perfil } from "../../components/Perfil";
 import axios from "../../configs/axiosConfig";
 import { Inbox } from "lucide-react"; // <- novo ícone
+import { Calendario } from "../../components/Calendario";
 
 export function Turmas() {
     const [turmas, setTurmas] = useState([]);
@@ -23,6 +24,7 @@ export function Turmas() {
 
     return (
         <div className="h-screen pt-16 pl-16 pr-8">
+            <Calendario />
             <Perfil />
             <h2 className="text-3xl font-bold text-[#0292B7] mb-10">Turmas</h2>
 
