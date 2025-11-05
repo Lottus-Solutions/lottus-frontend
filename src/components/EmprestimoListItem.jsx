@@ -16,7 +16,7 @@ export function EmprestimoListItem(props) {
         setShowConfirm(true);
     };
 
-    apiUrl = import.meta.env.VITE_API_URL;
+   const apiUrl = import.meta.env.VITE_API_URL;
 
     const handleConfirm = () => {
         setShowConfirm(false);
