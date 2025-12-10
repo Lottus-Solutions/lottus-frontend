@@ -48,7 +48,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_PUBLIC }} "
           for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
           echo 'Enviando para' \$host '...'
-          scp -i /home/ubuntu/parChaves/lottuschave -o StrictHostKeyChecking=no dist.zip ubuntu@\$host:/home/ubuntu/dist.zip
+          scp -i /home/ubuntu/parChaves/lottuschave.pem -o StrictHostKeyChecking=no dist.zip ubuntu@\$host:/home/ubuntu/dist.zip
           done
           "
 
