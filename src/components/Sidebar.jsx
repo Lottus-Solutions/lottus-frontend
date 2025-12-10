@@ -84,7 +84,7 @@ export function Sidebar() {
     </div>
   );
 }
-
+// 0292B7
 function SidebarButton({ nome, rota, Icon, ativo, onClick }) {
   return (
     <button
