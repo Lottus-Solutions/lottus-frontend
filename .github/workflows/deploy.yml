@@ -35,8 +35,8 @@ jobs:
       - name: Add SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/lottuschave.pem
+          chmod 600 ~/.ssh/lottuschave.pem
 
       - name: Copy dist.zip to EC2 PUBLIC
         run: |
@@ -60,7 +60,7 @@ jobs:
             set -e
             for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
               echo 'Movendo dist.zip em:' \$host
-              ssh -o StrictHostKeyChecking=no ubuntu@\$host '
+              ssh -i ~/.ssh/lottuschave.pem ubuntu@\$host '
                 sudo mkdir -p /var/www/html
                 sudo mv ~/dist.zip /var/www/html/
               '
