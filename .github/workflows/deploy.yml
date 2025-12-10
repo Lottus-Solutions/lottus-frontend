@@ -26,45 +26,43 @@ jobs:
       - name: Zip dist folder
         run: zip -r dist.zip dist/
 
-      - name: Upload artifact (optional debug)
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist-zip
-          path: dist.zip
-
-      # ADICIONA A CHAVE CORRETA
       - name: Add SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/lottuschave.pem
           chmod 600 ~/.ssh/lottuschave.pem
 
-      # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-      # 1) ENVIA dist.zip PARA EC2 PUBLICA (CHAVE CERTA)
-      # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-      - name: Copy dist.zip to EC2 PUBLIC
+      # ==========================================================
+      # 1) ENVIAR dist.zip PARA A EC2 PUBLICA
+      # ==========================================================
+      - name: Enviar dist.zip para EC2 PUBLICA
         run: |
           scp -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem dist.zip \
-            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_PUBLIC }}:/home/${{ secrets.EC2_USER }}/dist.zip
+            ubuntu@${{ secrets.EC2_HOST_PUBLIC }}:/home/ubuntu/dist.zip
 
-      # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-      # 2) PUBLICA → envia para os FRONT-END PRIVADOS
-      # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            # Enviar diretamente para EC2 FRONT 1 e FRONT 2
-      - name: Enviar dist.zip para cada FRONT
+      # ==========================================================
+      # 2) DA PUBLICA → ENVIAR dist.zip PARA AS EC2 PRIVADAS
+      # ==========================================================
+      - name: PUBLICA → enviar para FRONT 1 e FRONT 2
         run: |
-          for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
-            echo "Enviando para $host ..."
-            scp -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem dist.zip ubuntu@$host:/home/ubuntu/dist.zip
-          done
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem ubuntu@${{ secrets.EC2_HOST_PUBLIC }} "
+            for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
+              echo 'Enviando para' \$host '...'
+              scp -o StrictHostKeyChecking=no dist.zip ubuntu@\$host:/home/ubuntu/dist.zip
+            done
+          "
 
-      # Mover arquivo para /var/www/html
+      # ==========================================================
+      # 3) MOVER dist.zip PARA /var/www/html NAS PRIVADAS
+      # ==========================================================
       - name: Mover dist.zip para /var/www/html
         run: |
-          for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
-            echo "Movendo dist.zip em $host ..."
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem ubuntu@$host "
-              sudo mkdir -p /var/www/html &&
-              sudo mv ~/dist.zip /var/www/html/
-            "
-          done
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem ubuntu@${{ secrets.EC2_HOST_PUBLIC }} "
+            for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
+              echo 'Movendo dist.zip em:' \$host
+              ssh -o StrictHostKeyChecking=no ubuntu@\$host '
+                sudo mkdir -p /var/www/html &&
+                sudo mv ~/dist.zip /var/www/html/
+              '
+            done
+          "
