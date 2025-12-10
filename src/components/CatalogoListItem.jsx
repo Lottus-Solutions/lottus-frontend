@@ -1,5 +1,5 @@
 import { MenuIcon } from "lucide-react";
-import { BotaoPrincipal } from "./botoes/BotaoPrincipal";
+import { BotaoPrincipal } from "./Botoes/BotaoPrincipal";
 import { StatusItem } from "./StatusItem";
 import { useState } from "react";
 import { ModalDetalhesLivro } from "../components/Modals/ModalDetalhesLivro";

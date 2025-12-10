@@ -1,6 +1,6 @@
 import { X, Check } from "lucide-react";
 import { motion } from 'framer-motion';
-import { BotaoPrincipal } from "./botoes/BotaoPrincipal";
+import { BotaoPrincipal } from "./Botoes/BotaoPrincipal";
 import { useState } from "react";
 import axios from '../configs/axiosConfig';
 

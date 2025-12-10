@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BotaoPrincipal } from "./botoes/BotaoPrincipal";
+import { BotaoPrincipal } from "./Botoes/BotaoPrincipal";
 import { ProgressoLeitura } from "./ProgressoLeitura";
 import { ModalDetalhesAluno } from "./Modals/ModalDetalhesAluno";
 
