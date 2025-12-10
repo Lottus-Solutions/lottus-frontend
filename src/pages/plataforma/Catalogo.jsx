@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ChartColumnStacked, ChevronLeft, ChevronRight, Filter, Inbox } from "lucide-react";
-import { BotaoPrincipal } from "../../components/botoes/BotaoPrincipal";
+import { BotaoPrincipal } from "../../components/Botoes/BotaoPrincipal";
 import { CatalogoListItem } from "../../components/CatalogoListItem";
 import { Perfil } from "../../components/Perfil";
 import { Search } from "../../components/Search";
