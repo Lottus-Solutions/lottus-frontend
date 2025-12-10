@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import axios from "../../configs/axiosConfig";
 import { AlunoListItem } from "../../components/AlunoListItem";
-import { BotaoPrincipal } from "../../components/botoes/BotaoPrincipal";
+import { BotaoPrincipal } from "../../components/Botoes/BotaoPrincipal";
 import { Perfil } from "../../components/Perfil";
 import { Search } from "../../components/Search";
 import { ModalAdicionarAluno } from "../../components/Modals/ModalAdicionarAluno";
