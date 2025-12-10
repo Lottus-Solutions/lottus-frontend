@@ -46,16 +46,12 @@ jobs:
       - name: From PUBLIC → send dist.zip to FRONT 1 and FRONT 2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_PUBLIC }} "
-          # cria a chave na EC2 pública
-          mkdir -p ~/.ssh &&
-          echo '${{ secrets.EC2_SSH_KEY }}' > ~/.ssh/deploy_key &&
-          chmod 600 ~/.ssh/deploy_key &&
+          for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
+          echo 'Enviando para' \$host '...'
+          scp -o StrictHostKeyChecking=no dist.zip ubuntu@\$host:/home/ubuntu/dist.zip
+          done
+          "
 
-            for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
-              echo 'Enviando para' \$host '...'
-              scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ~/dist.zip ubuntu@\$host:/home/ubuntu/dist.zip
-            done
-        "
 
 
       - name: Mover dist.zip para /var/www/html em cada FRONT
