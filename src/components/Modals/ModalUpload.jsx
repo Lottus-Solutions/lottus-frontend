@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Upload, X, File, Loader2 } from "lucide-react";
-import { BotaoBranco } from "../botoes/BotaoBranco";
+import { BotaoBranco } from "../Botoes/BotaoBranco";
 import { motion } from 'framer-motion';
 
 export function ModalUpload(props) {

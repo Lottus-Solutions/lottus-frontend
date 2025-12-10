@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
-import { BotaoPrincipal } from '../botoes/BotaoPrincipal';
+import { BotaoPrincipal } from '../Botoes/BotaoPrincipal';
 import { useEffect, useState } from 'react';
 import axios from '../../configs/axiosConfig';
 import { CardAdicionarCategoria } from '../CardAdicionarCategoria';
