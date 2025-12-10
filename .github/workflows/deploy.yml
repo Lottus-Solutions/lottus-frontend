@@ -50,26 +50,21 @@ jobs:
       # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
       # 2) PUBLICA → envia para os FRONT-END PRIVADOS
       # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-      - name: From PUBLIC → send dist.zip to FRONT 1 and FRONT 2
+            # Enviar diretamente para EC2 FRONT 1 e FRONT 2
+      - name: Enviar dist.zip para cada FRONT
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_PUBLIC }} "
-            for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
-              echo 'Enviando dist.zip para' \$host '...'
-              scp -i ~/.ssh/lottuschave.pem -o StrictHostKeyChecking=no dist.zip ubuntu@\$host:/home/ubuntu/dist.zip
-            done
-          "
+          for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
+            echo "Enviando para $host ..."
+            scp -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem dist.zip ubuntu@$host:/home/ubuntu/dist.zip
+          done
 
-      # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-      # 3) MOVE O ARQUIVO PARA /var/www/html em cada FRONT-END
-      # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-      - name: Mover dist.zip para /var/www/html em cada FRONT
+      # Mover arquivo para /var/www/html
+      - name: Mover dist.zip para /var/www/html
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_PUBLIC }} "
-            for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
-              echo 'Movendo dist.zip em:' \$host
-              ssh -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem ubuntu@\$host '
-                sudo mkdir -p /var/www/html
-                sudo mv ~/dist.zip /var/www/html/
-              '
-            done
-          "
+          for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
+            echo "Movendo dist.zip em $host ..."
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem ubuntu@$host "
+              sudo mkdir -p /var/www/html &&
+              sudo mv ~/dist.zip /var/www/html/
+            "
+          done
