@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "../configs/axiosConfig";
-import { BotaoPrincipal } from "./botoes/BotaoPrincipal";
-import { BotaoBranco } from "./botoes/BotaoBranco";
+import { BotaoPrincipal } from "./Botoes/BotaoPrincipal";
+import { BotaoBranco } from "./Botoes/BotaoBranco";
 import { ConfirmFinalizarEmprestimo } from "./Modals/ConfirmFinalizarEmprestimo";
 import { AlertSucesso } from "./Alerts/AlertSucesso";
 

@@ -39,7 +39,7 @@ function LayoutPrivado() {
 
 export function App() {
   return (
-    <Router>
+    <Router basename="/">
       <Routes>
 
         {/* Rotas públicas */}

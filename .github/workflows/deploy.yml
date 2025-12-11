@@ -1,0 +1,75 @@
+name: CD - Deploy Frontend
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production
+        run: npm run build
+
+      - name: Zip dist folder
+        run: zip -r dist.zip dist/
+
+      - name: Upload artifact (optional debug)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-zip
+          path: dist.zip
+
+      # --- criar o arquivo de chave no runner a partir do Secret
+      - name: Add SSH key to runner
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/lottuschave.pem
+          chmod 600 ~/.ssh/lottuschave.pem
+
+      # 1) enviar dist.zip do runner para a EC2 PUBLIC
+      - name: Copy dist.zip to EC2 PUBLIC
+        run: |
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem dist.zip \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_PUBLIC }}:/home/${{ secrets.EC2_USER }}/dist.zip
+
+      # 2) na EC2 PUBLIC, usar a chave que já existe em /home/ubuntu/parChaves/lottuschave.pem
+      #    para repassar dist.zip para as EC2 privadas
+      - name: From PUBLIC → send dist.zip to FRONT 1 and FRONT 2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_PUBLIC }} "
+            set -e
+            for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
+              echo 'Enviando dist.zip para' \$host '...'
+              # usa a chave localizada em /home/ubuntu/parChaves/lottuschave.pem NA EC2 PUBLIC
+              scp -o StrictHostKeyChecking=no -i /home/ubuntu/parChaves/lottuschave.pem /home/ubuntu/dist.zip ubuntu@\$host:/home/ubuntu/dist.zip \
+                && echo 'ok' || echo 'falha'
+            done
+          "
+
+      # 3) mover o dist.zip nas FRONTs para /var/www/html (sem descompactar)
+      - name: Move dist.zip into /var/www/html on each FRONT
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/lottuschave.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_PUBLIC }} "
+            set -e
+            for host in ${{ secrets.FRONT_PRIV1 }} ${{ secrets.FRONT_PRIV2 }}; do
+              echo 'Movendo dist.zip em:' \$host
+              # conecta na privada e executa o move (sudo porque /var/www/html é protegido)
+              ssh -o StrictHostKeyChecking=no -i /home/ubuntu/parChaves/lottuschave.pem ubuntu@\$host '
+                sudo mkdir -p /var/www/html &&
+                sudo mv /home/ubuntu/dist.zip /var/www/html/
+              ' && echo 'movido' || echo 'erro mover'
+            done
+          "

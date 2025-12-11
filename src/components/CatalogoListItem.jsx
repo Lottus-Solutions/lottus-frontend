@@ -1,10 +1,10 @@
 import { MenuIcon } from "lucide-react";
-import { BotaoPrincipal } from "./botoes/BotaoPrincipal";
+import { BotaoPrincipal } from "./Botoes/BotaoPrincipal";
 import { StatusItem } from "./StatusItem";
 import { useState } from "react";
 import { ModalDetalhesLivro } from "../components/Modals/ModalDetalhesLivro";
 import { ModalAdicionarEmprestimo } from "../components/Modals/ModalAdicionarEmprestimo";
-import { BotaoInativo } from "./botoes/BotaoInativo";
+import { BotaoInativo } from "./Botoes/BotaoInativo";
 import { CategoriaItem } from "./CategoriaItem";
 
 export function CatalogoListItem(props) {
